@@ -23,16 +23,16 @@
             String[] userInfo = Security.authoriseRequest(request);
             String id = userInfo[1];
             String username = userInfo[0];
-            if(id == null) {
+            if (id == null) {
                 request.setAttribute("invalid-login", "true");
                 request.setAttribute("address", "main.jsp");
-                getServletContext().getRequestDispatcher("/index.jsp").forward(request,response);
+                getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
             } else {
                 response.addCookie(new Cookie("id", id));
             }
         %>
-        
-        
+
+
         <div class="main-body">
             <header>
                 <span id="logo">Distributed Systems Project II</span>
@@ -49,20 +49,27 @@
 
             <ul>
                 <%
+                    // Find index of thread being requested
                     String threadTitle;
                     int index;
                     for (index = 0; index < Database.getNumberOfThreads(); index++) {
                         threadTitle = Database.getThread(index).getTitle();
-                        if (threadTitle.equals(request.getParameter("thread-title"))) {
+                        String requestedThread = Security.sanitise(request.getParameter("thread-title"));
+                        if (threadTitle.equals(requestedThread)) {
                             break;
                         }
                     }
-                    ForumThread thread = Database.getThread(index);
-                    String latestContent = request.getParameter("messageBody");
-                    if (latestContent != null) {
-                        thread.addMessage(latestContent, request.getParameter("poster"));
+
+                    ForumThread thread = Database.getThread(index); // Retrieve requested thread
+                    String postedContent = Security.sanitise(request.getParameter("messageBody"));
+
+                    // If user posted content, add message to thread
+                    if (postedContent != null) {
+                        thread.addMessage(postedContent, Security.sanitise(request.getParameter("poster")));
                     }
-                    int messageCount = 0;
+
+                    // For each message, display according to set of tags and style
+                    int messageCount = 0; // Used to find last message posted
                     for (Message message : thread.getAllMessages()) {
                         messageCount++;
                 %>
@@ -73,8 +80,11 @@
                             <span><%= message.getPoster()%></span>
                             <br><%= message.getDate()%>
                         </div>
-                        <div class="message" <%= (message.getContent().equals(latestContent) || 
-                                (request.getParameter("refresh") != null && messageCount == thread.getAllMessages().size())) ? "id='latest'" : ""%>>
+                        <div class="message" 
+                            <%  // identify message as "latest" if it is the last message
+                                if (messageCount == thread.getAllMessages().size())
+                                     out.print("id='latest'");
+                             %>>
                             <%= message.getContent()%>
                         </div>
                     </div>
@@ -83,14 +93,14 @@
                 <li>
                     <div class="big-wrapper message-container">
                         <div class="poster-info">
-                            <p><img src="images/male-default.png" title="<%= username %>" alt="<%= username %>"></p>
-                            <p><%= username %><br></p>
+                            <p><img src="images/male-default.png" title="<%= username%>" alt="<%= username%>"></p>
+                            <p><%= username%><br></p>
                         </div>
                         <div class="message">
                             <form name="newPost" action="readThread.jsp#latest" method="POST">
                                 <textarea class="message thread-message" name="messageBody"></textarea>
                                 <input id="submit-button" type="submit" value="Post">
-                                <input type="hidden" name="poster" value="<%= username %>">
+                                <input type="hidden" name="poster" value="<%= username%>">
                                 <input type="hidden" name="thread-title" value="<%= thread.getTitle()%>">
                             </form>
                             <form name="refresh" action="readThread.jsp#latest" method="POST">

@@ -19,6 +19,7 @@
         <%
             // Check session ID, or username and password; if it fails, forward to login
             String[] userInfo = Security.authoriseRequest(request);
+            String username = userInfo[0];
             String id = userInfo[1];
             if(id == null) {
                 request.setAttribute("invalid-login", "true");
@@ -29,10 +30,10 @@
             }
 
             // Add new thread if parameters exist
-            String newThreadTitle = request.getParameter("threadName");
+            String newThreadTitle = Security.sanitise(request.getParameter("threadName"));
             if (newThreadTitle != null) {
                 ForumThread newThread = new ForumThread(newThreadTitle);
-                newThread.addMessage(request.getParameter("threadBody"), Security.verifySession(id));
+                newThread.addMessage(Security.sanitise(request.getParameter("threadBody")), username);
                 Database.addThread(newThread);
             }
         %>
@@ -62,7 +63,7 @@
                     %>
                     <li>
                         <div class="big-wrapper">
-                            <button class="thread-title-button" type="submit" name="thread-title" value="<%= title%>"><%= title%></button>
+                            <button class="thread-title-button" type="submit" name="thread-title" value="<%= title %>"><%= title %></button>
                             <span class="thread-description">
                                 <%= description%>
                             </span>

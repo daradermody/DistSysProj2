@@ -4,6 +4,7 @@
     Author     : daradermody
 --%>
 
+<%@page import="mainPackage.Security"%>
 <%@page import="java.util.Map.Entry"%>
 <%@page import="java.util.Map"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -20,14 +21,18 @@
         <%
             // Add session ID cookie to test if cookies enabled (tested in main.jsp)
             response.addCookie(new Cookie("id", ""));
-            String address = (String)request.getAttribute("address");
+            
+            // Get address of intended location (before forward to login page)
+            String address = Security.sanitise((String)request.getAttribute("address"));
             if(address == null)
                 address = "main.jsp";
+            
+            // If user submitted parameters for inteded page, retrieve them and add them (except username/passwords)
             if(!request.getParameterMap().isEmpty()){
                 address += "?";
                 for(Entry<String, String[]> entry : request.getParameterMap().entrySet())
                     if(!entry.getKey().equals("username") && !entry.getKey().equals("password"))
-                    address += String.format("%s=%s&", entry.getKey(), entry.getValue()[0]);
+                    address += String.format("%s=%s&", Security.sanitise(entry.getKey()), Security.sanitise(entry.getValue()[0]));
                 address = address.substring(0, address.length() - 1); // Truncate last & character
             }
                 
