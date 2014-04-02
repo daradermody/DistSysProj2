@@ -6,9 +6,11 @@
 package mainPackage;
 
 import java.util.ArrayList;
+import java.util.UUID;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import java.util.UUID;
+import org.owasp.html.PolicyFactory;
+import org.owasp.html.Sanitizers;
 
 /**
  *
@@ -140,21 +142,22 @@ public class Security {
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals("id")) {
-                    userInfo[ID] = cookie.getValue();
+                    userInfo[ID] = sanitise(cookie.getValue());
                 }
             }
         }
         // If no session cookie, check for session parameter in URL
         if (userInfo[ID] == null || userInfo[ID].equals("")) {
-            userInfo[ID] = request.getParameter("id");
+            userInfo[ID] = sanitise(request.getParameter("id"));
         }
 
         // If no session ID, check for username and password details
         userInfo[USER] = verifySession(userInfo[ID]);
         if (userInfo[USER] == null) {
-            userInfo[USER] = request.getParameter("username");
-            String password = request.getParameter("password");
-
+            userInfo[USER] = sanitise(request.getParameter("username"));
+            String password = sanitise(request.getParameter("password"));
+            System.out.println(userInfo[USER]);
+            System.out.println(password);
             // If no username or password, redirect to login page
             if (verifyUser(userInfo[USER], password)) {
                 userInfo[ID] = startSession(userInfo[USER]);
@@ -167,7 +170,22 @@ public class Security {
     }
     
     public static String sanitise(String str) {
-        String sanitisedStr = null;
+        String sanitisedStr;
+
+        /* Example of building custome policy:
+        HtmlPolicyBuilder policyBuilder1 = new HtmlPolicyBuilder();
+        new HtmlPolicyBuilder()
+            .allowElements("a")
+            .allowUrlProtocols("https")
+            .allowAttributes("href").onElements("a")
+            .requireRelNofollowOnLinks()
+        
+        PolicyFactory policy = policyBuilder1.toFactory();
+        policy.sanitize(inputString);
+        */
+        
+        PolicyFactory stripAllTagsPolicy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
+        sanitisedStr = stripAllTagsPolicy.sanitize(str);
         
         return sanitisedStr;
     }
