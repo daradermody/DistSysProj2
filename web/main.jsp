@@ -6,7 +6,6 @@
 
 <%@page import="mainPackage.*" %>
 <%@page import="java.util.ArrayList" %>
-<%@page import="org.owasp.validator.html.*" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>

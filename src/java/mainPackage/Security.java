@@ -6,9 +6,11 @@
 
 package mainPackage;
 
+import java.security.Policy;
 import java.util.ArrayList;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import=org.owasp.validator.html.*;
 
 /**
  *
@@ -81,4 +83,15 @@ public class Security {
         return userInfo;
     }
     
+    public static String sanitise(String input) {
+        String POLICY_FILE_LOCATION = "antisamy-1.4.1.xml"; // Path to policy file
+        String dirtyInput = "<div><script>alert(1);</script></div>"; // Some fake input
+
+        Policy policy = Policy.getInstance(POLICY_FILE_LOCATION); // Create Policy object
+
+        AntiSamy as = new AntiSamy(); // Create AntiSamy object
+        CleanResults cr = as.scan(dirtyInput, policy, AntiSamy.SAX); // Scan dirtyInput
+
+        return cr.getCleanHTML(); // Do something with your clean output!
+    }
 }
