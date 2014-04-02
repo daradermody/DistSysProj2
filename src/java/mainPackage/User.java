@@ -16,7 +16,7 @@ import java.util.Arrays;
 public class User {
     final protected String username;
     final protected String sessionID;
-    protected int currentTimestamp;
+    private long currentTimestamp;
     
     /**
      * Default constructor - creates a new forum thread with default title "no title"
@@ -25,5 +25,16 @@ public class User {
         username = usnm;
         sessionID = id;
         currentTimestamp = time;
+    }
+    
+    /**
+     * Method that sets the timestamp associated with the user
+     * @param time Time value to set the timestamp of the user to
+     */
+    public void setTimestamp(long time) {
+        currentTimestamp = time;
+    }
+    public long getTimestamp() {
+        return currentTimestamp;
     }
 }
