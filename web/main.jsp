@@ -16,27 +16,6 @@
         <meta name="keywords" content="distributed systems project forum application java servlet security">
 
         <link rel="stylesheet" type="text/css" href="style.css" />
-        <%--
-            ForumThread tempThread = new ForumThread("Car Thread");
-            tempThread.addMessage("some emssage about carz", "Dara Dermody");
-            tempThread.addMessage("agreement!", "Dara");
-            tempThread.addMessage("You're wrong!", "Dara Dermody");
-            Database.addThread(tempThread);
-            
-            tempThread = new ForumThread("Money Thread");
-            tempThread.addMessage("some emssage about moneyz", "Dara Dermody");
-            tempThread.addMessage("agreement!", "Dara Dermody");
-            tempThread.addMessage("You're wrong!", "Dara Dermody");
-            Database.addThread(tempThread);
-            
-            tempThread = new ForumThread("Niko is gay");
-            tempThread.addMessage("A lot has been said about this subject, but here "
-                    + "is where enthusiasts about the truth of Niko's sexuality can "
-                    + "express how we truly feel about the matter.", "Dara Dermody");
-            tempThread.addMessage("yes!", "Dara Dermody");
-            tempThread.addMessage("I though that was well-known??", "Dara Dermody");
-            Database.addThread(tempThread);
-        --%>
 
         <%
             // Check session ID, or username and password; if it fails, forward to login
