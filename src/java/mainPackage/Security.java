@@ -31,7 +31,7 @@ public class Security {
      * corresponding password for this user and false otherwise
      */
     public static boolean verifyUser(String username, String password) {
-        boolean validity = false;
+        boolean validity = true;
         // Uncomment this when Emma decides on her class name.
         /**
          * if(username != null && password != null) validity =
