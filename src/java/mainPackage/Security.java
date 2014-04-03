@@ -31,10 +31,11 @@ public class Security {
      * corresponding password for this user and false otherwise
      */
     public static boolean verifyUser(String username, String password) {
-        boolean validity = true;
+        boolean validity = false;
         
         // Debug use only; remove once rest of method is implemented
-        if(username.equals("<none>")) validity = false; 
+        if(username.equals("jamie") && password.equals("4867360cb1992404f35efe8f7f0e8bbcc0b9069f"))
+            validity = true;
         
         // Uncomment and set validity to false (above) when Emma provides database
         /*
@@ -73,6 +74,7 @@ public class Security {
             for (User user : users) {
                 if (user.username.equals(username)) {
                     exists = true;
+                    ID = user.sessionID;
                     break;
                 }
             }
@@ -82,9 +84,7 @@ public class Security {
                 UUID uniqueID = UUID.randomUUID(); // Creates the universally unique session ID
                 Integer seconds = (int) (long) (System.currentTimeMillis() / 1000); // Retrieves the current time in milliseconds and converts into an integer
                 users.add(new User(username, String.valueOf(uniqueID), seconds)); // Adds the user into the list of logged in users
-                System.out.println(String.valueOf(uniqueID));
                 ID = String.valueOf(uniqueID); // Return session ID
-                System.out.println("ID after uniqueID assignment");
             }
         }
         return ID;
@@ -179,18 +179,18 @@ public class Security {
             userInfo[USER] = sanitise(request.getParameter("username"));
             String password = sanitise(request.getParameter("password"));
 
-            // If username and hashed password exists, print on server
-            if(!userInfo[USER].equals("")) {
-                System.out.println("User logging on: " + userInfo[USER]);
-                System.out.println("Hashed password: " + password);
-            } else // Else note username and hashed password were not submitted
-                userInfo[USER] = "none";
+            // Note that username and password were not attempted
+            if(password.equals(""))
+                userInfo[USER] = "<none>";
 
             // If user verified, start session and return ID
-            if (verifyUser(userInfo[USER], password))
+            if (verifyUser(userInfo[USER], password)) {
                 userInfo[ID] = startSession(userInfo[USER]);
-            System.out.println("ID: " + userInfo[ID]);
-
+                System.out.printf("Login attempt:\t%s | %s\n\tSession ID:\t%s\n",
+                        userInfo[USER], password, userInfo[ID]);
+            } else
+                System.out.printf("Login attempt: %s | %s\n\t>>> LOGIN FAILURE <<<\n",
+                        userInfo[USER], password);
         }
 
         return userInfo;
