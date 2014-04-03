@@ -20,11 +20,15 @@
         <%
             // Check session ID, or username and password; if it fails, forward to login
             String[] userInfo = Security.authoriseRequest(request);
+            String username = userInfo[0];
             String id = userInfo[1];
             boolean cookiesDisabled = request.getCookies() == null;
             
-            if(id == null) {
-                request.setAttribute("invalid-login", "true");
+            if(id.equals("")) {
+                if(!username.equals("<none>"))
+                    request.setAttribute("invalid-login", "true");
+                else
+                    request.setAttribute("invalid-login", "false");
                 request.setAttribute("address", "index.jsp");
                 getServletContext().getRequestDispatcher("/login.jsp").forward(request,response);
             }
@@ -48,10 +52,10 @@
         <div class="main-body">
             <header>
               <span id="logo">Distributed Systems Project II</span>
-                <form name="logOut" action="login.jsp" method="POST">
+                <form name="logOut" action="login.jsp" method="GET">
                     <input type="submit" class="header-button" value="Log Out">
                 </form>
-                <form name="home" action="index.jsp" method="POST">
+                <form name="home" action="index.jsp" method="GET">
                     <input type="submit" class="header-button" value="Threads">
                 </form>
             </header>

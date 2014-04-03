@@ -21,9 +21,14 @@
             String[] userInfo = Security.authoriseRequest(request);
             String username = userInfo[0];
             String id = userInfo[1];
+            System.out.println("ID from index: " + id);
             boolean cookiesDisabled = request.getCookies() == null;
-            if(id == null) {
-                request.setAttribute("invalid-login", "true");
+            
+            if(id.equals("")) {
+                if(!username.equals("<none>"))
+                    request.setAttribute("invalid-login", "true");
+                else
+                    request.setAttribute("invalid-login", "false");
                 request.setAttribute("address", "index.jsp");
                 getServletContext().getRequestDispatcher("/login.jsp").forward(request,response);
             }
@@ -58,18 +63,18 @@
         <div class="main-body">
             <header>
                 <span id="logo">Distributed Systems Project II</span>
-                <form name="logOut" action="login.jsp" method="POST">
+                <form name="logOut" action="login.jsp" method="GET">
                     <input type="submit" class="header-button" value="Log Out">
                 </form>
                 <form name="home" action="index.jsp" method="GET">
                     <input type="submit" class="header-button" value="Threads">
                 </form>
-                <form name="newThread" action="newThread.jsp" method="POST">
+                <form name="newThread" action="newThread.jsp" method="GET">
                     <input type="submit" class="header-button" value="New Thread">
                 </form>
             </header>
 
-            <form name="threadList" method="POST" action="readThread.jsp">
+            <form name="threadList" method="GET" action="readThread.jsp">
                 <ul>
                     <%-- Loops through getting of thread items --%>
                     <% for (int i = 0; i < Database.getNumberOfThreads(); i++) {

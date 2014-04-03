@@ -24,11 +24,14 @@
             String id = userInfo[1];
             String username = userInfo[0];
             boolean cookiesDisabled = request.getCookies() == null;
-
-            if (id == null) {
-                request.setAttribute("invalid-login", "true");
+            
+            if(id.equals("")) {
+                if(!username.equals("<none>"))
+                    request.setAttribute("invalid-login", "true");
+                else
+                    request.setAttribute("invalid-login", "false");
                 request.setAttribute("address", "index.jsp");
-                getServletContext().getRequestDispatcher("/login.jsp").forward(request, response);
+                getServletContext().getRequestDispatcher("/login.jsp").forward(request,response);
             }
 
             if(!cookiesDisabled)
@@ -50,13 +53,13 @@
         <div class="main-body">
             <header>
                 <span id="logo">Distributed Systems Project II</span>
-                <form name="logOut" action="login.jsp" method="POST">
+                <form name="logOut" action="login.jsp" method="GET">
                     <input type="submit" class="header-button" value="Log Out">
                 </form>
-                <form name="home" action="index.jsp" method="POST">
+                <form name="home" action="index.jsp" method="GET">
                     <input type="submit" class="header-button" value="Threads">
                 </form>
-                <form name="newThread" action="newThread.jsp" method="POST">
+                <form name="newThread" action="newThread.jsp" method="GET">
                     <input type="submit" class="header-button" value="New Thread">
                 </form>
             </header>
@@ -111,13 +114,13 @@
                             <p><%= username%><br></p>
                         </div>
                         <div class="message">
-                            <form name="newPost" action="readThread.jsp#latest" method="POST">
+                            <form name="newPost" action="readThread.jsp#latest" method="GET">
                                 <textarea class="message thread-message" name="messageBody"></textarea>
                                 <input id="submit-button" type="submit" value="Post">
                                 <input type="hidden" name="poster" value="<%= username%>">
                                 <input type="hidden" name="thread-title" value="<%= thread.getTitle()%>">
                             </form>
-                            <form name="refresh" action="readThread.jsp#latest" method="POST">
+                            <form name="refresh" action="readThread.jsp#latest" method="GET">
                                 <input type="hidden" name="thread-title" value="<%= thread.getTitle()%>">
                                 <button id="refresh-button" type="submit" name="refresh" value="true">Refresh</button>
                             </form>
