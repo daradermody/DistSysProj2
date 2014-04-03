@@ -21,13 +21,15 @@
             String[] userInfo = Security.authoriseRequest(request);
             String username = userInfo[0];
             String id = userInfo[1];
+            boolean cookiesDisabled = request.getCookies() == null;
             if(id == null) {
                 request.setAttribute("invalid-login", "true");
                 request.setAttribute("address", "index.jsp");
                 getServletContext().getRequestDispatcher("/login.jsp").forward(request,response);
-            } else {
-                response.addCookie(new Cookie("id", id));
             }
+            
+            if(!cookiesDisabled)
+                response.addCookie(new Cookie("id", id));                
 
             // Add new thread if parameters exist
             String newThreadTitle = Security.sanitise(request.getParameter("threadName"));
@@ -37,6 +39,19 @@
                 Database.addThread(newThread);
             }
         %>
+        
+        <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.0.js"></script>
+        <script type="text/javascript">
+            // If cookies are disabled, append id field on submit
+            $(function() {
+                $('form').submit(function() {
+                    if(<%= cookiesDisabled %>)
+                        $(this).append('<input type="hidden" name="id" value="<%= id %>">');
+                    
+                    return true;
+                });
+            });
+        </script>
     </head>
 
     <body>
@@ -46,7 +61,7 @@
                 <form name="logOut" action="login.jsp" method="POST">
                     <input type="submit" class="header-button" value="Log Out">
                 </form>
-                <form name="home" action="index.jsp" method="POST">
+                <form name="home" action="index.jsp" method="GET">
                     <input type="submit" class="header-button" value="Threads">
                 </form>
                 <form name="newThread" action="newThread.jsp" method="POST">
