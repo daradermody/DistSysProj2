@@ -35,11 +35,7 @@
 
             // Get address of intended location (before forward to login page)
             String address = "";
-            try { // Try retrieve address attribute set by other pages, else set to empty
-                address = Security.sanitise((String) request.getAttribute("address"));
-            } catch(Exception e) {
-                address = "";
-            }
+            address = Security.sanitise((String) request.getAttribute("address"));
             
             if (address.equals(""))
                 address = "index.jsp";

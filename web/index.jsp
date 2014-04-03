@@ -21,7 +21,6 @@
             String[] userInfo = Security.authoriseRequest(request);
             String username = userInfo[0];
             String id = userInfo[1];
-            System.out.println("ID from index: " + id);
             boolean cookiesDisabled = request.getCookies() == null;
             
             if(id.equals("")) {
