@@ -35,7 +35,9 @@ public class Security {
         
         // Debug use only; remove once rest of method is implemented
         if(username.equals("jamie") && password.equals("4867360cb1992404f35efe8f7f0e8bbcc0b9069f"))
-            validity = true;
+            validity = true; // password is "isgay"
+        else if(username.equals("dara") && password.equals("a040f3973f1221397c9ab7e225b5647f9567081b"))
+            validity = true; // password is "notgay"
         
         // Uncomment and set validity to false (above) when Emma provides database
         /*
@@ -192,7 +194,7 @@ public class Security {
                 userInfo[ID] = startSession(userInfo[USER]);
                 System.out.printf("Login attempt:\t%s | %s\n\tSession ID:\t%s\n",
                         userInfo[USER], password, userInfo[ID]);
-            } else // Notify invalid attempt
+            } else if(!userInfo[USER].equals("<none>")) // Notify invalid attempt
                 System.out.printf("Login attempt: %s | %s\n\t>>> LOGIN FAILURE <<<\n",
                         userInfo[USER], password);
         }
