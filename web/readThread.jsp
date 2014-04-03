@@ -82,22 +82,24 @@
                         threadTitle = Database.getThread(index).getTitle();
                         String requestedThread = Security.sanitise(request.getParameter("thread-title"));
                         if (threadTitle.equals(requestedThread)) {
-                            Database.getThread(index); // Retrieve requested thread
+                            thread = Database.getThread(index); // Retrieve requested thread
                             break;
                         }
                     }
-                    
                     // If requested thread not found, redirect to main thread page
                     if(thread == null) response.sendRedirect("index.jsp");
 
                     // If user posted content, add message to thread
                     String postedContent = Security.sanitise(request.getParameter("messageBody"));
-                    if (postedContent != null)
-                        thread.addMessage(postedContent, Security.sanitise(request.getParameter("poster")));
+
+                    if (!postedContent.equals("")) {
+                        thread.addMessage(postedContent, username);
+                    }
 
                     // For each message, display according to set of tags and style
                     int messageCount = 0; // Used to find last message posted
                     int numMessages = thread.getAllMessages().size(); // Variable holding number of messages
+
                     for (Message message : thread.getAllMessages()) {
                         messageCount++; // Increment counter of messages
                 %>
@@ -128,7 +130,6 @@
                             <form name="newPost" action="readThread.jsp#latest" method="GET">
                                 <textarea class="message thread-message" name="messageBody"></textarea>
                                 <input id="submit-button" type="submit" value="Post">
-                                <input type="hidden" name="poster" value="<%= username%>">
                                 <input type="hidden" name="thread-title" value="<%= thread.getTitle()%>">
                             </form>
                             <form name="refresh" action="readThread.jsp#latest" method="GET">

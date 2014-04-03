@@ -298,7 +298,7 @@ button[type="submit"].thread-title-button:hover{
 }
 
 .thread-message {
-    height: 300px;
+    height: 100px;
     width: 100%;
 }
 
