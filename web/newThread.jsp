@@ -23,8 +23,8 @@
             String id = userInfo[1];
             if(id == null) {
                 request.setAttribute("invalid-login", "true");
-                request.setAttribute("address", "main.jsp");
-                getServletContext().getRequestDispatcher("/index.jsp").forward(request,response);
+                request.setAttribute("address", "index.jsp");
+                getServletContext().getRequestDispatcher("/login.jsp").forward(request,response);
             } else {
                 response.addCookie(new Cookie("id", id));
             }
@@ -33,15 +33,15 @@
         <div class="main-body">
             <header>
               <span id="logo">Distributed Systems Project II</span>
-                <form name="logOut" action="index.jsp" method="POST">
+                <form name="logOut" action="login.jsp" method="POST">
                     <input type="submit" class="header-button" value="Log Out">
                 </form>
-                <form name="home" action="main.jsp" method="POST">
+                <form name="home" action="index.jsp" method="POST">
                     <input type="submit" class="header-button" value="Threads">
                 </form>
             </header>
 
-            <form name="newThread" method="GET" action="main.jsp">
+            <form name="newThread" method="GET" action="index.jsp">
                 <div class="big-wrapper message-container">
                     <div id="thread-title-container">
                         Title of thread: <input type="text" id="thread-title" name="threadName">
