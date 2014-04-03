@@ -14,7 +14,7 @@ import org.owasp.html.Sanitizers;
 
 /**
  *
- * @author Dara Dermody, Niko Flores, Emma Foley and Patrick Stapleton
+ * @author Dara Dermody, Niko Flores, Emma Foley and Patrick O'Keffe
  */
 public class Security {
 
@@ -157,16 +157,18 @@ public class Security {
      * is null.
      */
     public static String[] authoriseRequest(HttpServletRequest request) {
-        int USER = 0;
-        int ID = 1;
-        String userInfo[] = {null, null};
+        // User information array setup to package returned information
+        int USER = 0; // Constant index for username
+        int ID = 1; // Constant index for session ID
+        String userInfo[] = {null, null}; // User information array
 
         // Check for ID in cookies
-        Cookie[] cookies = request.getCookies();
+        Cookie[] cookies = request.getCookies(); // Fetch Cookie array
         if (cookies != null)
+            // Cycle through each cookie in Cookie array to find one with name "id"
             for (Cookie cookie : cookies)
                 if (cookie.getName().equals("id"))
-                    userInfo[ID] = sanitise(cookie.getValue());
+                    userInfo[ID] = sanitise(cookie.getValue()); // Get and sanitise string value
 
         // If no session cookie, check for session parameter in URL
         if (userInfo[ID] == null)
@@ -176,23 +178,26 @@ public class Security {
 
         // If no session ID, check for username and password details
         if (userInfo[USER] == null) {
+            // Get username and password parameters from user request and sanitise each
             userInfo[USER] = sanitise(request.getParameter("username"));
             String password = sanitise(request.getParameter("password"));
 
-            // Note that username and password were not attempted
+            // Set username to <none> if username and password were not attempted (to 
+            // determine whether or not to display 'invalid attempt' message on login page
             if(password.equals(""))
                 userInfo[USER] = "<none>";
 
-            // If user verified, start session and return ID
+            // Verified username and password, and start session if valid
             if (verifyUser(userInfo[USER], password)) {
                 userInfo[ID] = startSession(userInfo[USER]);
                 System.out.printf("Login attempt:\t%s | %s\n\tSession ID:\t%s\n",
                         userInfo[USER], password, userInfo[ID]);
-            } else
+            } else // Notify invalid attempt
                 System.out.printf("Login attempt: %s | %s\n\t>>> LOGIN FAILURE <<<\n",
                         userInfo[USER], password);
         }
 
+        // Return array containing username ("<none>" if not attempted) and session ID
         return userInfo;
     }
 
@@ -205,9 +210,9 @@ public class Security {
      * @return String with dangerous substrings removed (i.e. clean and safe)
      */
     public static String sanitise(String str) {
-        String sanitisedStr;
+        String sanitisedStr; // String that will hold sanitised string
 
-        /* Example of building custome policy:
+        /* Example of building custom policy object:
          HtmlPolicyBuilder policyBuilder1 = new HtmlPolicyBuilder();
          new HtmlPolicyBuilder()
          .allowElements("a")
@@ -218,8 +223,12 @@ public class Security {
          PolicyFactory policy = policyBuilder1.toFactory();
          policy.sanitize(inputString);
          */
-        PolicyFactory stripAllTagsPolicy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
-        sanitisedStr = stripAllTagsPolicy.sanitize(str);
+        
+        // Use premade policy that allows some formatting tags (i, b, u, etc.) and
+        // links (a href)
+        PolicyFactory policy1 = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
+        
+        sanitisedStr = policy1.sanitize(str); // Sanitise string (remove dangerous substrings)
 
         return sanitisedStr;
     }
