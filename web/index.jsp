@@ -19,39 +19,48 @@
         <%
             // Check session ID, or username and password; if it fails, forward to login
             String[] userInfo = Security.authoriseRequest(request);
-            String username = userInfo[0];
-            String id = userInfo[1];
+            String username = userInfo[0]; // Set to more convenient variable
+            String id = userInfo[1]; // Set to more convenient variable
+            // Determine if user has cookies disabled
             boolean cookiesDisabled = request.getCookies() == null;
             
+            // If session ID invalid/non-existant, forward to login page (also 
+            // determine if login was attempted)
             if(id.equals("")) {
+                // If login failed, set attribute so login.jsp can set error message
                 if(!username.equals("<none>"))
                     request.setAttribute("invalid-login", "true");
                 else
                     request.setAttribute("invalid-login", "false");
-                request.setAttribute("address", "index.jsp");
+                request.setAttribute("address", "index.jsp"); // Set requested page as this page
+                // Forward request (with parameters) to login page for authentication
                 getServletContext().getRequestDispatcher("/login.jsp").forward(request,response);
             }
             
-            if(!cookiesDisabled)
-                response.addCookie(new Cookie("id", id));                
+            Cookie cookie = new Cookie("id", id); // Create new cookie with session ID
+            cookie.setMaxAge(900); // Set max age to 15 minutes
+            if(!cookiesDisabled) // If cookies enabled, add cookie to response
+                response.addCookie(cookie);                  
 
             // Add new thread if parameters exist
             String newThreadTitle = Security.sanitise(request.getParameter("threadName"));
             if (!newThreadTitle.equals("")) {
+                // Create new forum thread object with user-inputted thread title/name
                 ForumThread newThread = new ForumThread(newThreadTitle);
+                // Add message to thread obejct
                 newThread.addMessage(Security.sanitise(request.getParameter("threadBody")), username);
-                Database.addThread(newThread);
+                Database.addThread(newThread); // Add thread object to database
             }
         %>
         
+        <!-- Import jQuery -->
         <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.0.js"></script>
+        <%-- JavaScript function that adds ID field to form when submitted if cookies are disabled --%>
         <script type="text/javascript">
-            // If cookies are disabled, append id field on submit
             $(function() {
-                $('form').submit(function() {
-                    if(<%= cookiesDisabled %>)
+                $('form').submit(function() { // On submission of form
+                    if(<%= cookiesDisabled %>) // Check if cookies disabled
                         $(this).append('<input type="hidden" name="id" value="<%= id %>">');
-                    
                     return true;
                 });
             });

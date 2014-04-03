@@ -21,28 +21,37 @@
         <%
             // Check session ID, or username and password; if it fails, forward to login
             String[] userInfo = Security.authoriseRequest(request);
-            String id = userInfo[1];
-            String username = userInfo[0];
+            String username = userInfo[0]; // Set to more convenient variable
+            String id = userInfo[1]; // Set to more convenient variable
+            // Determine if user has cookies disabled
             boolean cookiesDisabled = request.getCookies() == null;
             
+            // If session ID invalid/non-existant, forward to login page (also 
+            // determine if login was attempted)
             if(id.equals("")) {
+                // If login failed, set attribute so login.jsp can set error message
                 if(!username.equals("<none>"))
                     request.setAttribute("invalid-login", "true");
                 else
                     request.setAttribute("invalid-login", "false");
-                request.setAttribute("address", "index.jsp");
+                request.setAttribute("address", "index.jsp"); // Set requested page as this page
+                // Forward request (with parameters) to login page for authentication
                 getServletContext().getRequestDispatcher("/login.jsp").forward(request,response);
             }
-
-            if(!cookiesDisabled)
-                response.addCookie(new Cookie("id", id));  
+            
+            Cookie cookie = new Cookie("id", id); // Create new cookie with session ID
+            cookie.setMaxAge(900); // Set max age to 15 minutes
+            if(!cookiesDisabled) // If cookies enabled, add cookie to response
+                response.addCookie(cookie);   
         %>
+        
+        <!-- Import jQuery -->
         <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.0.js"></script>
+        <%-- JavaScript function that adds ID field to form when submitted if cookies are disabled --%>
         <script type="text/javascript">
-            // If cookies are disabled, append ID field on submit
             $(function() {
-                $('form').submit(function() {
-                    if(<%= cookiesDisabled %>)
+                $('form').submit(function() { // On submission of form
+                    if(<%= cookiesDisabled %>) // Check if cookies disabled
                         $(this).append('<input type="hidden" name="id" value="<%= id %>">');
                     return true;
                 });
@@ -68,27 +77,29 @@
                 <%
                     // Find index of thread being requested
                     String threadTitle;
-                    int index;
-                    for (index = 0; index < Database.getNumberOfThreads(); index++) {
+                    ForumThread thread = null;
+                    for (int index = 0; index < Database.getNumberOfThreads(); index++) {
                         threadTitle = Database.getThread(index).getTitle();
                         String requestedThread = Security.sanitise(request.getParameter("thread-title"));
                         if (threadTitle.equals(requestedThread)) {
+                            Database.getThread(index); // Retrieve requested thread
                             break;
                         }
                     }
-
-                    ForumThread thread = Database.getThread(index); // Retrieve requested thread
-                    String postedContent = Security.sanitise(request.getParameter("messageBody"));
+                    
+                    // If requested thread not found, redirect to main thread page
+                    if(thread == null) response.sendRedirect("index.jsp");
 
                     // If user posted content, add message to thread
-                    if (postedContent != null) {
+                    String postedContent = Security.sanitise(request.getParameter("messageBody"));
+                    if (postedContent != null)
                         thread.addMessage(postedContent, Security.sanitise(request.getParameter("poster")));
-                    }
 
                     // For each message, display according to set of tags and style
                     int messageCount = 0; // Used to find last message posted
+                    int numMessages = thread.getAllMessages().size(); // Variable holding number of messages
                     for (Message message : thread.getAllMessages()) {
-                        messageCount++;
+                        messageCount++; // Increment counter of messages
                 %>
                 <li>
                     <div class="big-wrapper message-container">
@@ -97,22 +108,22 @@
                             <span><%= message.getPoster()%></span>
                             <br><%= message.getDate()%>
                         </div>
-                        <div class="message" 
-                            <%  // identify message as "latest" if it is the last message
-                                if (messageCount == thread.getAllMessages().size())
-                                     out.print("id='latest'");
-                             %>>
-                            <%= message.getContent()%>
+                        
+                        <%-- Identify message as "latest" if it is the last message (for auto-scrolling) --%>
+                        <div class="message" <%= (messageCount == numMessages) ? "id='latest'" : "" %>>
+                            <%= message.getContent() %> <%-- Fetch message body --%> 
                         </div>
                     </div>
                 </li>
-                <% }%>
+                <% } // End of for loop for retrieving all messages%>
+                
                 <li>
                     <div class="big-wrapper message-container">
                         <div class="poster-info">
-                            <p><img src="images/male-default.png" title="<%= username%>" alt="<%= username%>"></p>
-                            <p><%= username%><br></p>
+                            <p><img src="images/male-default.png" title="<%= username %>" alt="<%= username %>"></p>
+                            <p><%= username %><br></p>
                         </div>
+                        
                         <div class="message">
                             <form name="newPost" action="readThread.jsp#latest" method="GET">
                                 <textarea class="message thread-message" name="messageBody"></textarea>
