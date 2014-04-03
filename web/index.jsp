@@ -10,7 +10,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Template Page</title>
+        <title>Thread Page</title>
         <meta name="description" content="Website for forum application for Distributed Systems Project II">
         <meta name="keywords" content="distributed systems project forum application java servlet security">
 
@@ -23,7 +23,7 @@
             String id = userInfo[1];
             if(id == null) {
                 request.setAttribute("invalid-login", "true");
-                request.setAttribute("address", "main.jsp");
+                request.setAttribute("address", "index.jsp");
                 getServletContext().getRequestDispatcher("/login.jsp").forward(request,response);
             } else {
                 response.addCookie(new Cookie("id", id));
@@ -46,7 +46,7 @@
                 <form name="logOut" action="login.jsp" method="POST">
                     <input type="submit" class="header-button" value="Log Out">
                 </form>
-                <form name="home" action="main.jsp" method="POST">
+                <form name="home" action="index.jsp" method="POST">
                     <input type="submit" class="header-button" value="Threads">
                 </form>
                 <form name="newThread" action="newThread.jsp" method="POST">

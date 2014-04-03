@@ -10,7 +10,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Template Page</title>
+        <title><%= Security.sanitise(request.getParameter("thread-title")) %></title>
         <meta name="description" content="Website for forum application for Distributed Systems Project II">
         <meta name="keywords" content="distributed systems project forum application java servlet security">
 
