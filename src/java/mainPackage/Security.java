@@ -33,6 +33,9 @@ public class Security {
     public static boolean verifyUser(String username, String password) {
         boolean validity = true;
         
+        // Debug use only; remove once rest of method is implemented
+        if(username.equals("<none>")) validity = false; 
+        
         // Uncomment and set validity to false (above) when Emma provides database
         /*
         if(username != null && password != null) 
@@ -79,7 +82,9 @@ public class Security {
                 UUID uniqueID = UUID.randomUUID(); // Creates the universally unique session ID
                 Integer seconds = (int) (long) (System.currentTimeMillis() / 1000); // Retrieves the current time in milliseconds and converts into an integer
                 users.add(new User(username, String.valueOf(uniqueID), seconds)); // Adds the user into the list of logged in users
+                System.out.println(String.valueOf(uniqueID));
                 ID = String.valueOf(uniqueID); // Return session ID
+                System.out.println("ID after uniqueID assignment");
             }
         }
         return ID;
@@ -156,34 +161,36 @@ public class Security {
         int ID = 1;
         String userInfo[] = {null, null};
 
-        // Check if there is a session cookie
+        // Check for ID in cookies
         Cookie[] cookies = request.getCookies();
-        userInfo[ID] = "";
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("id")) {
+        if (cookies != null)
+            for (Cookie cookie : cookies)
+                if (cookie.getName().equals("id"))
                     userInfo[ID] = sanitise(cookie.getValue());
-                }
-            }
-        }
+
         // If no session cookie, check for session parameter in URL
-        if (userInfo[ID] == null || userInfo[ID].equals("")) {
+        if (userInfo[ID] == null)
             userInfo[ID] = sanitise(request.getParameter("id"));
-        }
+        
+        userInfo[USER] = verifySession(userInfo[ID]); // Get username from ID (null if invalid)
 
         // If no session ID, check for username and password details
-        userInfo[USER] = verifySession(userInfo[ID]);
         if (userInfo[USER] == null) {
             userInfo[USER] = sanitise(request.getParameter("username"));
             String password = sanitise(request.getParameter("password"));
-            System.out.println("User logging on: " + userInfo[USER]);
-            System.out.println("Hashed password: " + password);
-            // If no username or password, redirect to login page
-            if (verifyUser(userInfo[USER], password)) {
+
+            // If username and hashed password exists, print on server
+            if(!userInfo[USER].equals("")) {
+                System.out.println("User logging on: " + userInfo[USER]);
+                System.out.println("Hashed password: " + password);
+            } else // Else note username and hashed password were not submitted
+                userInfo[USER] = "none";
+
+            // If user verified, start session and return ID
+            if (verifyUser(userInfo[USER], password))
                 userInfo[ID] = startSession(userInfo[USER]);
-            } else {
-                userInfo[ID] = null;
-            }
+            System.out.println("ID: " + userInfo[ID]);
+
         }
 
         return userInfo;
