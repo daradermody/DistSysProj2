@@ -32,11 +32,23 @@ public class Security {
      */
     public static boolean verifyUser(String username, String password) {
         boolean validity = true;
-        // Uncomment this when Emma decides on her class name.
-        /**
-         * if(username != null && password != null) validity =
-         * forumBoard.verifyUser(username, password);
-         */
+        
+        // Uncomment and set validity to false (above) when Emma provides database
+        /*
+        if(username != null && password != null) 
+            validity = Database.verifyUser(username, password);
+        */
+
+        
+        // SHA-1 hash of string (only needed if passwords stored in database are
+        // plaintext)
+        /*
+        MessageDigest cript = MessageDigest.getInstance("SHA-1");
+        cript.reset();
+        cript.update(password.getBytes("utf8"));
+        password = new BigInteger(1, cript.digest()).toString(16);
+        */
+
         return validity;
     }
 
@@ -83,23 +95,25 @@ public class Security {
      */
     public static String verifySession(String sessionID) {
         String username = null;
-        
+
         if (sessionID != null) {
             // Cycle through each user to find User object associated with given session ID
-            for (User user : users)
+            for (User user : users) {
                 if (user.sessionID.equals(sessionID)) {
                     // Retrieves the current time in milliseconds and converts into an integer
                     Integer currentSeconds = (int) (long) (System.currentTimeMillis() / 1000);
                     // Calculates the elapsed time by subtracting the current time (in seconds) from the user's timestamp
-                    long elapsedTime = currentSeconds - user.getTimestamp(); 
-                    
+                    long elapsedTime = currentSeconds - user.getTimestamp();
+
                     // If the elapsed time is greater than 15 minutes (15 * 60 seconds = 900)
                     if (elapsedTime <= TIMEOUT) {
                         user.setTimestamp(currentSeconds); // Replaces the old user with the current one, with the new timestamp
-                        username =  user.username;
-                    } else
+                        username = user.username;
+                    } else {
                         endSession(sessionID); // Ends the session if the timer is longer than 15 minutes
+                    }
                 }
+            }
         }
         return username;
     }
@@ -112,7 +126,7 @@ public class Security {
      */
     public static boolean endSession(String sessionID) {
         boolean success = false;
-        
+
         if (sessionID != null) {
             // Cycle through each user to find User object associated with given session ID
             for (User user : users) {
@@ -122,14 +136,20 @@ public class Security {
                 }
             }
         }
-        
+
         return success;
     }
 
     /**
+     * Function that performs the necessary authentication of user. Called at on
+     * each JSP page to ensure the user is valid; this is done by checking the
+     * ID or, failing that, verifying the username and password possibly
+     * included.
      *
-     * @param request
-     * @return
+     * @param request HTTPServletRequest object that contains all the necessary
+     * information to verify the user and the user's request.
+     * @return String array of username and ID. if invalid, one of the elements
+     * is null.
      */
     public static String[] authoriseRequest(HttpServletRequest request) {
         int USER = 0;
@@ -156,8 +176,8 @@ public class Security {
         if (userInfo[USER] == null) {
             userInfo[USER] = sanitise(request.getParameter("username"));
             String password = sanitise(request.getParameter("password"));
-            System.out.println(userInfo[USER]);
-            System.out.println(password);
+            System.out.println("User logging on: " + userInfo[USER]);
+            System.out.println("Hashed password: " + password);
             // If no username or password, redirect to login page
             if (verifyUser(userInfo[USER], password)) {
                 userInfo[ID] = startSession(userInfo[USER]);
@@ -168,25 +188,32 @@ public class Security {
 
         return userInfo;
     }
-    
+
+    /**
+     * Function that sanitises a string by removing many characters sequences
+     * that might lead to a scripting attack; some formatting tags (i.e. b, i,
+     * etc.) and links (a href="") are allowed according to the user policy.
+     *
+     * @param str String to sanitise (i.e. remove dangerous substrings)
+     * @return String with dangerous substrings removed (i.e. clean and safe)
+     */
     public static String sanitise(String str) {
         String sanitisedStr;
 
         /* Example of building custome policy:
-        HtmlPolicyBuilder policyBuilder1 = new HtmlPolicyBuilder();
-        new HtmlPolicyBuilder()
-            .allowElements("a")
-            .allowUrlProtocols("https")
-            .allowAttributes("href").onElements("a")
-            .requireRelNofollowOnLinks()
+         HtmlPolicyBuilder policyBuilder1 = new HtmlPolicyBuilder();
+         new HtmlPolicyBuilder()
+         .allowElements("a")
+         .allowUrlProtocols("https")
+         .allowAttributes("href").onElements("a")
+         .requireRelNofollowOnLinks()
         
-        PolicyFactory policy = policyBuilder1.toFactory();
-        policy.sanitize(inputString);
-        */
-        
+         PolicyFactory policy = policyBuilder1.toFactory();
+         policy.sanitize(inputString);
+         */
         PolicyFactory stripAllTagsPolicy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
         sanitisedStr = stripAllTagsPolicy.sanitize(str);
-        
+
         return sanitisedStr;
     }
 }
