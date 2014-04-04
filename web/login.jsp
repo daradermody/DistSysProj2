@@ -42,7 +42,7 @@
 
             // Get address of intended location (before client was forward to login 
             // page) for use when user is verified
-            String address = Security.sanitise((String) request.getAttribute("address"));
+            String address = Security.sanitise((String) request.getAttribute("address"), true);
             
             // If no particular page was requested, set to default (index.jsp)
             if (address.equals(""))
@@ -57,7 +57,7 @@
                 for (Entry<String, String[]> entry : request.getParameterMap().entrySet())
                     // Check if username or password in request (do not include them)
                     if (!entry.getKey().equals("username") && !entry.getKey().equals("password"))
-                        address += String.format("%s=%s&", Security.sanitise(entry.getKey()), Security.sanitise(entry.getValue()[0]));
+                        address += String.format("%s=%s&", Security.sanitise(entry.getKey(), false), Security.sanitise(entry.getValue()[0], false));
                 
                 address = address.substring(0, address.length() - 1); // Truncate last '&' character
             }
