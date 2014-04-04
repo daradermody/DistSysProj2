@@ -6,6 +6,7 @@
 package mainPackage;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.UUID;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -33,29 +34,27 @@ public class Security {
      */
     public static boolean verifyUser(String username, String password) {
         boolean validity = false;
-        
+
         // Debug use only; remove once rest of method is implemented
-        if(username.equals("jamie") && password.equals("4867360cb1992404f35efe8f7f0e8bbcc0b9069f"))
+        if (username.equals("jamie") && password.equals("4867360cb1992404f35efe8f7f0e8bbcc0b9069f")) {
             validity = true; // password is "isgay"
-        else if(username.equals("dara") && password.equals("a040f3973f1221397c9ab7e225b5647f9567081b"))
+        } else if (username.equals("dara") && password.equals("a040f3973f1221397c9ab7e225b5647f9567081b")) {
             validity = true; // password is "notgay"
-        
+        }
         // Uncomment and set validity to false (above) when Emma provides database
         /*
-        if(username != null && password != null) 
-            validity = Database.verifyUser(username, password);
-        */
+         if(username != null && password != null) 
+         validity = Database.verifyUser(username, password);
+         */
 
-        
         // SHA-1 hash of string (only needed if passwords stored in database are
         // plaintext)
         /*
-        MessageDigest cript = MessageDigest.getInstance("SHA-1");
-        cript.reset();
-        cript.update(password.getBytes("utf8"));
-        password = new BigInteger(1, cript.digest()).toString(16);
-        */
-
+         MessageDigest cript = MessageDigest.getInstance("SHA-1");
+         cript.reset();
+         cript.update(password.getBytes("utf8"));
+         password = new BigInteger(1, cript.digest()).toString(16);
+         */
         return validity;
     }
 
@@ -90,6 +89,7 @@ public class Security {
                 ID = String.valueOf(uniqueID); // Return session ID
             }
         }
+
         return ID;
     }
 
@@ -136,10 +136,11 @@ public class Security {
         boolean success = false;
 
         if (sessionID != null) {
-            // Cycle through each user to find User object associated with given session ID
-            for (User user : users) {
+            for (Iterator<User> iter = users.iterator(); iter.hasNext();) {
+                User user = iter.next();
                 if (user.sessionID.equals(sessionID)) { // User found
-                    users.remove(users.indexOf(user)); // Removes the user session with the specified session ID
+                    iter.remove(); // Removes the user session with the specified session ID
+                    System.out.printf("Removed user:\t%s | %s", user.username, user.sessionID);
                     success = true;
                 }
             }
@@ -167,16 +168,19 @@ public class Security {
 
         // Check for ID in cookies
         Cookie[] cookies = request.getCookies(); // Fetch Cookie array
-        if (cookies != null)
-            // Cycle through each cookie in Cookie array to find one with name "id"
-            for (Cookie cookie : cookies)
-                if (cookie.getName().equals("id"))
+        if (cookies != null) // Cycle through each cookie in Cookie array to find one with name "id"
+        {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("id")) {
                     userInfo[ID] = sanitise(cookie.getValue(), false); // Get and sanitise string value
-
+                }
+            }
+        }
         // If no session cookie, check for session parameter in URL
-        if (userInfo[ID] == null)
+        if (userInfo[ID] == null) {
             userInfo[ID] = sanitise(request.getParameter("id"), false);
-        
+        }
+
         userInfo[USER] = verifySession(userInfo[ID]); // Get username from ID (null if invalid)
 
         // If no session ID, check for username and password details
@@ -187,17 +191,20 @@ public class Security {
 
             // Set username to <none> if username and password were not attempted (to 
             // determine whether or not to display 'invalid attempt' message on login page
-            if(password.equals(""))
+            if (password.equals("")) {
                 userInfo[USER] = "<none>";
+            }
 
             // Verified username and password, and start session if valid
             if (verifyUser(userInfo[USER], password)) {
                 userInfo[ID] = startSession(userInfo[USER]);
                 System.out.printf("Login attempt:\t%s | %s\n\tSession ID:\t%s\n",
                         userInfo[USER], password, userInfo[ID]);
-            } else if(!userInfo[USER].equals("<none>")) // Notify invalid attempt
+            } else if (!userInfo[USER].equals("<none>")) // Notify invalid attempt
+            {
                 System.out.printf("Login attempt: %s | %s\n\t>>> LOGIN FAILURE <<<\n",
                         userInfo[USER], password);
+            }
         }
 
         // Return array containing username ("<none>" if not attempted) and session ID
@@ -210,7 +217,7 @@ public class Security {
      * etc.) and links (a href="") are allowed according to the user policy.
      *
      * @param str String to sanitise (i.e. remove dangerous substrings)
-     * @param allowFormattingAndLinks Paremeter that determins if formatting and 
+     * @param allowFormattingAndLinks Paremeter that determins if formatting and
      * link tags are allowed (b, i ,u, a href, etc.)
      * @return String with dangerous substrings removed (i.e. clean and safe)
      */
@@ -219,22 +226,22 @@ public class Security {
 
         /* Example of building custom policy object:
          HtmlPolicyBuilder policyBuilder1 = new HtmlPolicyBuilder()
-                                                .allowElements("a")
-                                                .allowUrlProtocols("https")
-                                                .allowAttributes("href").onElements("a")
-                                                .requireRelNofollowOnLinks();
+         .allowElements("a")
+         .allowUrlProtocols("https")
+         .allowAttributes("href").onElements("a")
+         .requireRelNofollowOnLinks();
         
          PolicyFactory policy = policyBuilder1.toFactory();
          policy.sanitize(inputString);
          */
-        
         // Initialise policy to convert html-unsafe characters to safe characters
         PolicyFactory policy1 = new HtmlPolicyBuilder().toFactory();
-        
-        if(allowFormattingAndLinks)
-            // Use pre-made policy that allows some formatting tags (i, b, u, etc.) and links (a href)
+
+        if (allowFormattingAndLinks) // Use pre-made policy that allows some formatting tags (i, b, u, etc.) and links (a href)
+        {
             policy1 = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
-        
+        }
+
         sanitisedStr = policy1.sanitize(str); // Sanitise string (remove dangerous substrings)
 
         return sanitisedStr;
