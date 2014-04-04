@@ -25,7 +25,6 @@
         <%-- JavaScript function to hash password before sending it to server --%>
         <script type="text/javascript">
             $(function() {
-                alert("test");
                 $('#login-fields').submit(function() {
                     $passwd = $('input[name="password"]');
                     $passwd.val(CryptoJS.SHA1($passwd.val()));
