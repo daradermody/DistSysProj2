@@ -39,8 +39,9 @@
             
             Cookie cookie = new Cookie("id", id); // Create new cookie with session ID
             cookie.setMaxAge(900); // Set max age to 15 minutes
+            cookie.setSecure(true); // Forces browser to only send cookie over HTTPS/SSL
             if(!cookiesDisabled) // If cookies enabled, add cookie to response
-                response.addCookie(cookie);                  
+                response.addCookie(cookie); 
 
             // Add new thread if parameters exist
             String newThreadTitle = Security.sanitise(request.getParameter("threadName"));
