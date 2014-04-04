@@ -19,12 +19,13 @@
         <link rel="stylesheet" type="text/css" href="style.css" />
         
         <!-- Import jQuery -->
-        <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.0.js"></script>
+        <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.0.js"></script>
         <%-- Import SHA-1 hashing function --%>
-        <script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/sha1.js"></script>
+        <script src="https://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/sha1.js"></script>
         <%-- JavaScript function to hash password before sending it to server --%>
         <script type="text/javascript">
             $(function() {
+                alert("test");
                 $('#login-fields').submit(function() {
                     $passwd = $('input[name="password"]');
                     $passwd.val(CryptoJS.SHA1($passwd.val()));

@@ -46,7 +46,7 @@
         %>
         
         <!-- Import jQuery -->
-        <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.0.js"></script>
+        <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.0.js"></script>
         <%-- JavaScript function that adds ID field to form when submitted if cookies are disabled --%>
         <script type="text/javascript">
             $(function() {
