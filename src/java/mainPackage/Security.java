@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import org.owasp.html.HtmlPolicyBuilder;
 import org.owasp.html.PolicyFactory;
 import org.owasp.html.Sanitizers;
 
@@ -170,19 +171,19 @@ public class Security {
             // Cycle through each cookie in Cookie array to find one with name "id"
             for (Cookie cookie : cookies)
                 if (cookie.getName().equals("id"))
-                    userInfo[ID] = sanitise(cookie.getValue()); // Get and sanitise string value
+                    userInfo[ID] = sanitise(cookie.getValue(), false); // Get and sanitise string value
 
         // If no session cookie, check for session parameter in URL
         if (userInfo[ID] == null)
-            userInfo[ID] = sanitise(request.getParameter("id"));
+            userInfo[ID] = sanitise(request.getParameter("id"), false);
         
         userInfo[USER] = verifySession(userInfo[ID]); // Get username from ID (null if invalid)
 
         // If no session ID, check for username and password details
         if (userInfo[USER] == null) {
             // Get username and password parameters from user request and sanitise each
-            userInfo[USER] = sanitise(request.getParameter("username"));
-            String password = sanitise(request.getParameter("password"));
+            userInfo[USER] = sanitise(request.getParameter("username"), false);
+            String password = sanitise(request.getParameter("password"), false);
 
             // Set username to <none> if username and password were not attempted (to 
             // determine whether or not to display 'invalid attempt' message on login page
@@ -209,26 +210,30 @@ public class Security {
      * etc.) and links (a href="") are allowed according to the user policy.
      *
      * @param str String to sanitise (i.e. remove dangerous substrings)
+     * @param allowFormattingAndLinks Paremeter that determins if formatting and 
+     * link tags are allowed (b, i ,u, a href, etc.)
      * @return String with dangerous substrings removed (i.e. clean and safe)
      */
-    public static String sanitise(String str) {
+    public static String sanitise(String str, boolean allowFormattingAndLinks) {
         String sanitisedStr; // String that will hold sanitised string
 
         /* Example of building custom policy object:
-         HtmlPolicyBuilder policyBuilder1 = new HtmlPolicyBuilder();
-         new HtmlPolicyBuilder()
-         .allowElements("a")
-         .allowUrlProtocols("https")
-         .allowAttributes("href").onElements("a")
-         .requireRelNofollowOnLinks()
+         HtmlPolicyBuilder policyBuilder1 = new HtmlPolicyBuilder()
+                                                .allowElements("a")
+                                                .allowUrlProtocols("https")
+                                                .allowAttributes("href").onElements("a")
+                                                .requireRelNofollowOnLinks();
         
          PolicyFactory policy = policyBuilder1.toFactory();
          policy.sanitize(inputString);
          */
         
-        // Use premade policy that allows some formatting tags (i, b, u, etc.) and
-        // links (a href)
-        PolicyFactory policy1 = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
+        // Initialise policy to convert html-unsafe characters to safe characters
+        PolicyFactory policy1 = new HtmlPolicyBuilder().toFactory();
+        
+        if(allowFormattingAndLinks)
+            // Use pre-made policy that allows some formatting tags (i, b, u, etc.) and links (a href)
+            policy1 = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
         
         sanitisedStr = policy1.sanitize(str); // Sanitise string (remove dangerous substrings)
 

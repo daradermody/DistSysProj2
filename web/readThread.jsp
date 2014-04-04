@@ -10,7 +10,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><%= Security.sanitise(request.getParameter("thread-title")) %></title>
+        <title><%= Security.sanitise(request.getParameter("thread-title"), false) %></title>
         <meta name="description" content="Website for forum application for Distributed Systems Project II">
         <meta name="keywords" content="distributed systems project forum application java servlet security">
 
@@ -81,7 +81,7 @@
                     ForumThread thread = null;
                     for (int index = 0; index < Database.getNumberOfThreads(); index++) {
                         threadTitle = Database.getThread(index).getTitle();
-                        String requestedThread = Security.sanitise(request.getParameter("thread-title"));
+                        String requestedThread = Security.sanitise(request.getParameter("thread-title"), false);
                         if (threadTitle.equals(requestedThread)) {
                             thread = Database.getThread(index); // Retrieve requested thread
                             break;
@@ -91,7 +91,7 @@
                     if(thread == null) response.sendRedirect("index.jsp");
 
                     // If user posted content, add message to thread
-                    String postedContent = Security.sanitise(request.getParameter("messageBody"));
+                    String postedContent = Security.sanitise(request.getParameter("messageBody"), true);
 
                     if (!postedContent.equals("")) {
                         thread.addMessage(postedContent, username);
