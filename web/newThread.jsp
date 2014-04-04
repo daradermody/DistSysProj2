@@ -63,6 +63,7 @@
             <header>
               <span id="logo">Distributed Systems Project II</span>
                 <form name="logOut" action="login.jsp" method="GET">
+                    <input type="hidden" name="log-out" value="true">
                     <input type="submit" class="header-button" value="Log Out">
                 </form>
                 <form name="home" action="index.jsp" method="GET">
