@@ -22,8 +22,6 @@
             String[] userInfo = Security.authoriseRequest(request);
             String username = userInfo[0]; // Set to more convenient variable
             String id = userInfo[1]; // Set to more convenient variable
-            // Determine if user has cookies disabled
-            boolean cookiesDisabled = request.getCookies() == null;
             
             // If session ID invalid/non-existant, forward to login page (also 
             // determine if login was attempted)
@@ -38,6 +36,9 @@
                 getServletContext().getRequestDispatcher("/login.jsp").forward(request,response);
             }
             
+            // Determine if user has cookies disabled
+            boolean cookiesDisabled = request.getCookies() == null;
+            
             Cookie cookie = new Cookie("id", id); // Create new cookie with session ID
             cookie.setMaxAge(900); // Set max age to 15 minutes
             cookie.setSecure(true); // Forces browser to only send cookie over HTTPS/SSL
@@ -51,7 +52,7 @@
         <script type="text/javascript">
             $(function() {
                 $('form').submit(function() { // On submission of form
-                    if(<%= cookiesDisabled %>) // Check if cookies disabled
+                    if(!navigator.cookieEnabled) // Check if cookies disabled
                         $(this).append('<input type="hidden" name="id" value="<%= id %>">');
                     return true;
                 });
