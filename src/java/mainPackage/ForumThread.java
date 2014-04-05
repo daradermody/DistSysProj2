@@ -9,7 +9,7 @@ package mainPackage;
 import java.util.*;
 
 /**
- *
+ * This class is based on the module labs, but some modification have been made.
  * @author reiner.dojen
  */
 public class ForumThread {
@@ -24,6 +24,17 @@ public class ForumThread {
         title = "no title";
     }
 
+
+    /**
+     * Constructor to create a forum thread  with a given title.
+     * 
+     * @param forumTitle Title for forum thread.
+     */
+    public ForumThread(String forumTitle) {
+        this.messages = new ArrayList<Message>();
+        this.keywords = new ArrayList<String>();
+        this.title = forumTitle;
+    }
 
     /**
      * Constructor to create a forum thread  with a given title and

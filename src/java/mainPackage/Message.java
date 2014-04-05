@@ -34,39 +34,36 @@ public class Message {
      * @param pstr poster of message
      */
     public Message(String msg, String pstr) {
-        content = msg;
-        poster = pstr;
+        this.content = msg;
+        this.poster = pstr;
 
         DateFormat dateFormatter = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
-        date = dateFormatter.format(new Date());
+        this.date = dateFormatter.format(new Date());
     }
-
-    /**
-     * Set the content of the forum message
-     *
-     * @param msg New content for forum message
+    
+     /**
+     * Constructor for resurrecting a message from a CSV file.
+     * In this case, the date is already specified, and won't be auto-generated.
+     * @param text the message content.
+     * @param poster the message poster.
+     * @param date the date the message was originally posted.
      */
-    public void setContent(String msg) {
-        content = msg;
+    public Message(String text, String poster, String date){
+        this.content = text;
+        this.poster = poster;
+        this.date = date;
     }
-
+    
+   
     /**
      * Returns the content of the forum message
      *
      * @return Content of the forum message
      */
     public String getContent() {
-        return content;
+        return this.content;
     }
 
-    /**
-     * Set the content of the forum message
-     *
-     * @param pstr poster of message
-     */
-    public void setPoster(String pstr) {
-        poster = pstr;
-    }
 
     /**
      * Returns the content of the forum message
@@ -74,7 +71,7 @@ public class Message {
      * @return Content of the forum message
      */
     public String getPoster() {
-        return poster;
+        return this.poster;
     }
 
     /**
@@ -83,17 +80,17 @@ public class Message {
      * @return Content of the forum message
      */
     public String getDate() {
-        return date;
+        return this.date;
     }
 
     /**
      * Evaluates whether the forum content contains a given string.
      *
-     * @param text String to search for in forum content
-     * @return true if text is contained in forum content, false otherwise
+     * @param text String to search for in message content
+     * @return true if text is contained in message content, false otherwise
      */
     public boolean contains(String text) {
-        return content.contains(text);
+        return this.content.contains(text);
     }
-
+    
 }

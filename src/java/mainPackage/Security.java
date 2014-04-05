@@ -20,7 +20,7 @@ import org.owasp.html.Sanitizers;
  */
 public class Security {
 
-    private static ArrayList<User> users = new ArrayList<>();
+    private static ArrayList<User> sessionusers = new ArrayList<>();
     final private static long TIMEOUT = 900;
 
     /**
@@ -73,10 +73,10 @@ public class Security {
 
         if (username != null) {
             // Cycle through sessions recorded for existence of user
-            for (User user : users) {
-                if (user.username.equals(username)) {
+            for (User user : sessionusers) {
+                if (user.getUsername().equals(username)) {
                     exists = true;
-                    ID = user.sessionID;
+                    ID = user.getSessionID();
                     break;
                 }
             }
@@ -85,7 +85,7 @@ public class Security {
             if (exists == false) {
                 UUID uniqueID = UUID.randomUUID(); // Creates the universally unique session ID
                 Integer seconds = (int) (long) (System.currentTimeMillis() / 1000); // Retrieves the current time in milliseconds and converts into an integer
-                users.add(new User(username, String.valueOf(uniqueID), seconds)); // Adds the user into the list of logged in users
+                sessionusers.add(new User(username, String.valueOf(uniqueID), seconds)); // Adds the user into the list of logged in sessionusers
                 ID = String.valueOf(uniqueID); // Return session ID
             }
         }
@@ -106,8 +106,8 @@ public class Security {
 
         if (sessionID != null) {
             // Cycle through each user to find User object associated with given session ID
-            for (User user : users) {
-                if (user.sessionID.equals(sessionID)) {
+            for (User user : sessionusers) {
+                if (user.getSessionID().equals(sessionID)) {
                     // Retrieves the current time in milliseconds and converts into an integer
                     Integer currentSeconds = (int) (long) (System.currentTimeMillis() / 1000);
                     // Calculates the elapsed time by subtracting the current time (in seconds) from the user's timestamp
@@ -116,7 +116,7 @@ public class Security {
                     // If the elapsed time is greater than 15 minutes (15 * 60 seconds = 900)
                     if (elapsedTime <= TIMEOUT) {
                         user.setTimestamp(currentSeconds); // Replaces the old user with the current one, with the new timestamp
-                        username = user.username;
+                        username = user.getUsername();
                     } else {
                         endSession(sessionID); // Ends the session if the timer is longer than 15 minutes
                     }
@@ -136,11 +136,11 @@ public class Security {
         boolean success = false;
 
         if (sessionID != null) {
-            for (Iterator<User> iter = users.iterator(); iter.hasNext();) {
+            for (Iterator<User> iter = sessionusers.iterator(); iter.hasNext();) {
                 User user = iter.next();
-                if (user.sessionID.equals(sessionID)) { // User found
+                if (user.getSessionID().equals(sessionID)) { // User found
                     iter.remove(); // Removes the user session with the specified session ID
-                    System.out.printf("Removed user:\t%s | %s", user.username, user.sessionID);
+                    System.out.printf("Removed user:\t%s | %s", user.getUsername(), user.getSessionID());
                     success = true;
                 }
             }
