@@ -34,25 +34,11 @@ public class Security {
      */
     public static boolean verifyUser(String username, String password) {
         boolean validity = false;
-
-        // Debug use only; remove once rest of method is implemented
-//        if (username.equals("jamie") && password.equals("e29e2e5c2eadb1b147a93e32ac54b1a8"))
-//            validity = true; // password is "fj"
-//        else if (username.equals("dara") && password.equals("a2a6b7270ab9eb07f23a911264587198"))
-//            validity = true; // password is "dk"
-            
+        
         // Uncomment and set validity to false (above) when Emma provides database
         if(username != null && password != null) 
             validity = UserList.verifyUser(username, password);
 
-        // SHA-1 hash of string (only needed if passwords stored in database are
-        // plaintext)
-        /*
-         MessageDigest cript = MessageDigest.getInstance("SHA-1");
-         cript.reset();
-         cript.update(password.getBytes("utf8"));
-         password = new BigInteger(1, cript.digest()).toString(16);
-         */
         return validity;
     }
 
@@ -82,6 +68,15 @@ public class Security {
             if (exists == false) {
                 UUID uniqueID = UUID.randomUUID(); // Creates the universally unique session ID
                 Integer seconds = (int) (System.currentTimeMillis() / 1000); // Retrieves the current time in milliseconds and converts into an integer
+                
+                // Cycle through all user in the list of generated users for user requiring session
+                for (User user : UserList.getUserList())
+                    if(user.getUsername().equals(username)) {
+                        user.setSessionID(String.valueOf(uniqueID)); // Set new session ID generated
+                        user.setTimestamp(seconds); // Set current timestamp of user
+                        sessionUsers.add(user); // Adds the user into the list of logged in users
+                    }
+
                 // lookup user in userlist
                 // verify user
                 // update session ID and time
@@ -108,9 +103,7 @@ public class Security {
         if (sessionID != null) {
             // Cycle through each user to find User object associated with given session ID
             for (User user : sessionUsers) {
-                System.out.println("Checking user " + user.getUsername() + "|" + user.getSessionID());
                 if (user.getSessionID().equals(sessionID)) {
-                    System.out.println("Found: " + user.getUsername());
                     // Retrieves the current time in milliseconds and converts into an integer
                     int currentSeconds = (int)(System.currentTimeMillis() / 1000);
                     // Calculates the elapsed time by subtracting the current time (in seconds) from the user's timestamp
@@ -125,7 +118,6 @@ public class Security {
                 }
             }
         }
-        System.out.println(username);
         return username;
     }
 
@@ -179,11 +171,8 @@ public class Security {
         // If no session cookie, check for session parameter in URL
         if (userInfo[ID].equals(""))
             userInfo[ID] = sanitise(request.getParameter("id"), false);
-        System.out.println("ID: " + userInfo[ID]);
 
-        System.out.println("username before: " +userInfo[USER]);
         userInfo[USER] = verifySession(userInfo[ID]); // Get username from ID (null if invalid)
-        System.out.println("username after: " +userInfo[USER]);
         // If no session ID, check for username and password details
         if (userInfo[USER] == null) {
             // Get username and password parameters from user request and sanitise each
@@ -198,7 +187,6 @@ public class Security {
             // Verified username and password, and start session if valid
             if (verifyUser(userInfo[USER], password)) {
                 userInfo[ID] = startSession(userInfo[USER]);
-                System.out.println(users);
                 System.out.printf("Login attempt:\t%s | %s\n\tSession ID:\t%s\n",
                         userInfo[USER], password, userInfo[ID]);
             } else if (!userInfo[USER].equals("<none>")) // Notify invalid attempt
