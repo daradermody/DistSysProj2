@@ -39,6 +39,11 @@ public class ForumBoard {
         return threads.size();        
     }
     
+    public static int addThread(ForumThread t){
+        threads.add(t);
+        return threads.size();
+    }
+    
     /**
      * Get the number of threads 
      * @return number of thread in a forum

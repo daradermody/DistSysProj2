@@ -21,7 +21,7 @@ public class ForumThread {
         this.title = forumTitle;
     }
 
-
+    
     /**
      * Adds a new message at the end of the thread
      * 

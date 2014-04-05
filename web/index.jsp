@@ -51,7 +51,7 @@
                 ForumThread newThread = new ForumThread(newThreadTitle);
                 // Add message to thread obejct
                 newThread.addMessage(Security.sanitise(request.getParameter("threadBody"), true), username);
-                Database.addThread(newThread); // Add thread object to database
+                ForumBoard.addThread(newThread); // Add thread object to database
             }
         %>
         
@@ -88,9 +88,9 @@
             <form name="threadList" method="GET" action="readThread.jsp">
                 <ul>
                     <%-- Loops through getting of thread items --%>
-                    <% for (int i = 0; i < Database.getNumberOfThreads(); i++) {
-                            String title = Database.getThread(i).getTitle();
-                            String description = Database.getThread(i).getAllMessages().get(0).getContent();
+                    <% for (int i = 0; i < ForumBoard.getNumberOfThreads(); i++) {
+                            String title = ForumBoard.getThread(i).getTitle();
+                            String description = ForumBoard.getThread(i).getAllMessages().get(0).getContent();
                     %>
                     <li>
                         <div class="big-wrapper">
