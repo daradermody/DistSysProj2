@@ -20,14 +20,15 @@
 
         <!-- Import jQuery -->
         <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.0.js"></script>
-        <%-- Import SHA-1 hashing function --%>
-        <script src="https://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/sha1.js"></script>
+        <%-- Import PBKDF2 key derivation function --%>
+        <script type="text/javascript"  src="https://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/pbkdf2.js"></script>
         <%-- JavaScript function to hash password before sending it to server --%>
         <script type="text/javascript">
             $(function() {
                 $('#login-fields').submit(function() {
-                    $passwd = $('input[name="password"]');
-                    $passwd.val(CryptoJS.SHA1($passwd.val()));
+                    $passwd = $('input[name="password"]'); 
+                    var derivedKey = CryptoJS.PBKDF2($passwd.val(), CryptoJS.lib.WordArray.create(), {keySize: 128 / 32});
+                    $passwd.val(derivedKey);
                     return true;
                 });
             });
@@ -42,17 +43,21 @@
                 // Check for ID in cookies
                 Cookie[] cookies = request.getCookies(); // Fetch Cookie array
                 if (cookies != null) // Cycle through each cookie in Cookie array to find one with name "id"
-                    for (Cookie cookie : cookies)
-                        if (cookie.getName().equals("id"))
+                {
+                    for (Cookie cookie : cookies) {
+                        if (cookie.getName().equals("id")) {
                             id = Security.sanitise(cookie.getValue(), false); // Get and sanitise string value
-                
+                        }
+                    }
+                }
                 // If no session cookie, check for session parameter in URL
-                if (id == null)
+                if (id == null) {
                     id = Security.sanitise(request.getParameter("id"), false);
+                }
 
                 Security.endSession(id); // End session by calling to destroying user-id association
             }
-            
+
             // Add session ID cookie to test if client has cookies enabled (cookie
             // is searched for in subsequent pages.
             response.addCookie(new Cookie("id", ""));
