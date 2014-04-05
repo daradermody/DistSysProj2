@@ -14,8 +14,7 @@ import java.util.ArrayList;
  * @author elfie
  */
 public class ForumBoard {
-    private static ArrayList<ForumThread> threads;    
-    private static final String filepath = ""; // path to database
+    private static ArrayList<ForumThread> threads = new ArrayList<ForumThread>();
     private static int numberOfThreads;
     
     /**
@@ -39,7 +38,7 @@ public class ForumBoard {
         return threads.size();        
     }
     
-    public static int addThread(ForumThread t){
+    public static int addThread(ForumThread t) {
         threads.add(t);
         return threads.size();
     }
@@ -49,7 +48,7 @@ public class ForumBoard {
      * @return number of thread in a forum
      */
     public static int getNumberOfThreads(){
-        return ForumBoard.numberOfThreads;
+        return threads.size();
     }
     
 }
