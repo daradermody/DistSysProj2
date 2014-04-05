@@ -11,8 +11,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.Random;
 
@@ -24,7 +22,7 @@ public class User {
     private final String username;
     private String sessionID; //for security class
     private final String creationDate; // for Security class
-    private long sessionTime;
+    private int sessionTime;
     private final int salt;
     private final String pwdHash;
     /**
@@ -67,11 +65,11 @@ public class User {
         return this.creationDate;
     }
     
-    public long getTimestamp() {
+    public int getTimestamp() {
         return this.sessionTime;
     }
     
-    public void setTimestamp(long st) {
+    public void setTimestamp(int st) {
         this.sessionTime=st;
     }
     
@@ -97,16 +95,14 @@ public class User {
         if(plain == null) return null;
          
         try {
-       
             MessageDigest digest = MessageDigest.getInstance("SHA");
-        //Update input string in message digest
+            //Update input string in message digest
             digest.update(plain.getBytes(), 0, plain.length());
  
-        //Converts message digest value in base 16 (hex)
+            //Converts message digest value in base 16 (hex)
             cipher = new BigInteger(1, digest.digest()).toString(16);
  
         } catch (NoSuchAlgorithmException e) {
- 
             e.printStackTrace();
         }
         return cipher;

@@ -20,7 +20,7 @@ import org.owasp.html.Sanitizers;
  */
 public class Security {
 
-    private static ArrayList<User> sessionusers = new ArrayList<>();
+    private static ArrayList<User> sessionUsers = new ArrayList<>();
     final private static long TIMEOUT = 900;
 
     /**
@@ -73,7 +73,7 @@ public class Security {
 
         if (username != null) {
             // Cycle through sessions recorded for existence of user
-            for (User user : sessionusers) {
+            for (User user : sessionUsers) {
                 if (user.getUsername().equals(username)) {
                     exists = true;
                     ID = user.getSessionID();
@@ -85,7 +85,11 @@ public class Security {
             if (exists == false) {
                 UUID uniqueID = UUID.randomUUID(); // Creates the universally unique session ID
                 Integer seconds = (int) (long) (System.currentTimeMillis() / 1000); // Retrieves the current time in milliseconds and converts into an integer
-                sessionusers.add(new User(username, String.valueOf(uniqueID), seconds)); // Adds the user into the list of logged in sessionusers
+                // lookup user in userlist
+                // verify user
+                // update session ID and time
+                //DON'T create a new user
+                //sessionUsers.add(user);
                 ID = String.valueOf(uniqueID); // Return session ID
             }
         }
@@ -106,7 +110,7 @@ public class Security {
 
         if (sessionID != null) {
             // Cycle through each user to find User object associated with given session ID
-            for (User user : sessionusers) {
+            for (User user : sessionUsers) {
                 if (user.getSessionID().equals(sessionID)) {
                     // Retrieves the current time in milliseconds and converts into an integer
                     Integer currentSeconds = (int) (long) (System.currentTimeMillis() / 1000);
@@ -136,7 +140,7 @@ public class Security {
         boolean success = false;
 
         if (sessionID != null) {
-            for (Iterator<User> iter = sessionusers.iterator(); iter.hasNext();) {
+            for (Iterator<User> iter = sessionUsers.iterator(); iter.hasNext();) {
                 User user = iter.next();
                 if (user.getSessionID().equals(sessionID)) { // User found
                     iter.remove(); // Removes the user session with the specified session ID

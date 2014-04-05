@@ -14,23 +14,14 @@ import java.util.ArrayList;
  */
 public class UserList {
     
-    private ArrayList<User> users;
-
-    /**
-     * Default constructor, initializes an empty user list.
-     */
-    public UserList(){
-        users =  new ArrayList<User>();
-    }
-    
-    //TODO UserList(Filepath)
+    private static ArrayList<User> users;
     
     /**
      * Find a user, given the username.
      * @param username
      * @return the user object matching the username, or null 
      */
-    public User findUser(String username){
+    public static User findUser(String username){
         User user = null;
         loop:
         for(int i=0; i<users.size(); i++){
@@ -47,7 +38,7 @@ public class UserList {
      * @param username
      * @return the user object matching the username, or null 
      */
-    public boolean contains(String username){
+    public static boolean contains(String username){
         Boolean exists = false;
         if (users.isEmpty()) return false;
         loop:
@@ -64,8 +55,8 @@ public class UserList {
      * Get the entire user list
      * @return the users stored in the list 
      */
-    public ArrayList<User> getUserList(){
-        return this.users;
+    public static ArrayList<User> getUserList(){
+        return users;
     }
     
     /**
@@ -74,8 +65,8 @@ public class UserList {
      * @param password
      * @return true if the username and password match, false otherwise
      */
-    public boolean verifyUser(String username, String password){
-        User user = this.findUser(username);
+    public static boolean verifyUser(String username, String password){
+        User user = findUser(username);
         if (user != null){
             return (user.getPwdHash().equals(User.hash(user.getSalt()+password)));
         }
@@ -90,13 +81,13 @@ public class UserList {
      * @param password 
      */
     public void addUser(String username, String password){
-        if (!this.contains(username)){
-            this.users.add(new User(username, password));
+        if (!contains(username)){
+            users.add(new User(username, password));
         }
     }
     
     public void resurrectUser(String username, String hashedPW, int salt, String time ){
-        this.users.add(new User(username, hashedPW, salt, time));
+        users.add(new User(username, hashedPW, salt, time));
     }
     
     /**
@@ -106,8 +97,8 @@ public class UserList {
     @Override
     public String toString(){
         String str = "";
-        for (int i=0; i<this.users.size(); i++){
-            str += this.users.get(i).toString()+"\n";
+        for (int i=0; i<users.size(); i++){
+            str += users.get(i).toString()+"\n";
         }
         return str;
     }
