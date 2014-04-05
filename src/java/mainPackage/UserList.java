@@ -15,10 +15,10 @@ import java.util.ArrayList;
 public class UserList {
     
     private static ArrayList<User> users = new ArrayList<User>() {{
-        add(new User("dara", "dara"));
-        add(new User("emma", "emma"));
-        add(new User("patrick", "emma"));
-        add(new User("niko", "emma"));
+        add(new User("dara", "5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8"));
+        add(new User("emma", "efdb8f7f2fe9c47e34dfe1fb7c491d0638ec2d86"));
+        add(new User("patrick", "cbb7353e6d953ef360baf960c122346276c6e320"));
+        add(new User("niko", "a6ae6cf14935b977dc000a8624f9d66f90b41da0"));
     }};     
     /**
      * Find a user, given the username.
