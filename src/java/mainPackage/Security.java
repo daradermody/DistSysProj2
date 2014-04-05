@@ -36,11 +36,11 @@ public class Security {
         boolean validity = false;
 
         // Debug use only; remove once rest of method is implemented
-        if (username.equals("jamie") && password.equals("9e89ff919a6984c15fa300629456918c")) {
-            validity = true; // password is "isgay"
-        } else if (username.equals("dara") && password.equals("f336d176c3bb70d81e70e9d6b1dc63e1")) {
-            validity = true; // password is "notgay"
-        }
+        if (username.equals("jamie") && password.equals("e29e2e5c2eadb1b147a93e32ac54b1a8"))
+            validity = true; // password is "fj"
+        else if (username.equals("dara") && password.equals("a2a6b7270ab9eb07f23a911264587198"))
+            validity = true; // password is "dk"
+            
         // Uncomment and set validity to false (above) when Emma provides database
         /*
          if(username != null && password != null) 
