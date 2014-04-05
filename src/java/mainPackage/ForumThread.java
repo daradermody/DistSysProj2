@@ -1,37 +1,22 @@
 package mainPackage;
-
-/* ___ 
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-
 import java.util.*;
 
 /**
  * This class is based on the module labs, but some modification have been made.
  * @author reiner.dojen
+ * @author elfie
  */
 public class ForumThread {
     ArrayList<Message> messages;
     String title;
     
     /**
-     * Default constructor - creates a new forum thread with default title "no title"
-     */
-    public ForumThread() {
-        messages = new ArrayList<Message>();
-        title = "no title";
-    }
-
-
-    /**
      * Constructor to create a forum thread  with a given title.
      * 
      * @param forumTitle Title for forum thread.
      */
     public ForumThread(String forumTitle) {
-        this.messages = new ArrayList<Message>();
+        this.messages = new ArrayList<>();
        
         this.title = forumTitle;
     }
