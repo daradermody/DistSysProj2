@@ -71,18 +71,17 @@ public class Security {
 
         if (username != null) {
             // Cycle through sessions recorded for existence of user
-            for (User user : sessionUsers) {
+            for (User user : sessionUsers)
                 if (user.getUsername().equals(username)) {
                     exists = true;
                     ID = user.getSessionID();
                     break;
                 }
-            }
 
             // If no session exists for user, create session ID and add to user sessions list
             if (exists == false) {
                 UUID uniqueID = UUID.randomUUID(); // Creates the universally unique session ID
-                Integer seconds = (int) (long) (System.currentTimeMillis() / 1000); // Retrieves the current time in milliseconds and converts into an integer
+                Integer seconds = (int) (System.currentTimeMillis() / 1000); // Retrieves the current time in milliseconds and converts into an integer
                 // lookup user in userlist
                 // verify user
                 // update session ID and time
@@ -109,9 +108,11 @@ public class Security {
         if (sessionID != null) {
             // Cycle through each user to find User object associated with given session ID
             for (User user : sessionUsers) {
+                System.out.println("Checking user " + user.getUsername() + "|" + user.getSessionID());
                 if (user.getSessionID().equals(sessionID)) {
+                    System.out.println("Found: " + user.getUsername());
                     // Retrieves the current time in milliseconds and converts into an integer
-                    Integer currentSeconds = (int) (long) (System.currentTimeMillis() / 1000);
+                    int currentSeconds = (int)(System.currentTimeMillis() / 1000);
                     // Calculates the elapsed time by subtracting the current time (in seconds) from the user's timestamp
                     long elapsedTime = currentSeconds - user.getTimestamp();
 
@@ -119,12 +120,12 @@ public class Security {
                     if (elapsedTime <= TIMEOUT) {
                         user.setTimestamp(currentSeconds); // Replaces the old user with the current one, with the new timestamp
                         username = user.getUsername();
-                    } else {
+                    } else
                         endSession(sessionID); // Ends the session if the timer is longer than 15 minutes
-                    }
                 }
             }
         }
+        System.out.println(username);
         return username;
     }
 
@@ -171,20 +172,18 @@ public class Security {
         // Check for ID in cookies
         Cookie[] cookies = request.getCookies(); // Fetch Cookie array
         if (cookies != null) // Cycle through each cookie in Cookie array to find one with name "id"
-        {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("id")) {
+            for (Cookie cookie : cookies)
+                if (cookie.getName().equals("id"))
                     userInfo[ID] = sanitise(cookie.getValue(), false); // Get and sanitise string value
-                }
-            }
-        }
+
         // If no session cookie, check for session parameter in URL
-        if (userInfo[ID] == null) {
+        if (userInfo[ID].equals(""))
             userInfo[ID] = sanitise(request.getParameter("id"), false);
-        }
+        System.out.println("ID: " + userInfo[ID]);
 
+        System.out.println("username before: " +userInfo[USER]);
         userInfo[USER] = verifySession(userInfo[ID]); // Get username from ID (null if invalid)
-
+        System.out.println("username after: " +userInfo[USER]);
         // If no session ID, check for username and password details
         if (userInfo[USER] == null) {
             // Get username and password parameters from user request and sanitise each
@@ -193,20 +192,18 @@ public class Security {
 
             // Set username to <none> if username and password were not attempted (to 
             // determine whether or not to display 'invalid attempt' message on login page
-            if (password.equals("")) {
+            if (password.equals(""))
                 userInfo[USER] = "<none>";
-            }
 
             // Verified username and password, and start session if valid
             if (verifyUser(userInfo[USER], password)) {
                 userInfo[ID] = startSession(userInfo[USER]);
+                System.out.println(users);
                 System.out.printf("Login attempt:\t%s | %s\n\tSession ID:\t%s\n",
                         userInfo[USER], password, userInfo[ID]);
             } else if (!userInfo[USER].equals("<none>")) // Notify invalid attempt
-            {
                 System.out.printf("Login attempt: %s | %s\n\t>>> LOGIN FAILURE <<<\n",
                         userInfo[USER], password);
-            }
         }
 
         // Return array containing username ("<none>" if not attempted) and session ID
