@@ -14,8 +14,12 @@ import java.util.ArrayList;
  */
 public class UserList {
     
-    private static ArrayList<User> users;
-    
+    private static ArrayList<User> users = new ArrayList<User>() {{
+        add(new User("dara", "dara"));
+        add(new User("emma", "emma"));
+        add(new User("patrick", "emma"));
+        add(new User("niko", "emma"));
+    }};     
     /**
      * Find a user, given the username.
      * @param username
