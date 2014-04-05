@@ -27,7 +27,7 @@
             $(function() {
                 $('#login-fields').submit(function() {
                     $passwd = $('input[name="password"]'); 
-                    var derivedKey = CryptoJS.PBKDF2($passwd.val(), CryptoJS.lib.WordArray.create(), {keySize: 128 / 32});
+                    var derivedKey = CryptoJS.PBKDF2($passwd.val(), CryptoJS.lib.WordArray.create(), {keySize: 128 / 32, iterations: 1000});
                     $passwd.val(derivedKey);
                     return true;
                 });
