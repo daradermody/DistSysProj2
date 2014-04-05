@@ -46,6 +46,19 @@ public class User {
         sessionTime = 0; // for default
     }
     
+    /**
+     * Constructor for "resurrecting" a User from a file.
+     * @param username user's name
+     * @param hashPW hashed password
+     * @param salt salt 
+     * @param date creation date
+     */
+    public User(String username, String hashPW, int salt, String date){
+        this.username=username;
+        this.pwdHash=hashPW;
+        this.salt=salt;
+        this.creationDate = date;
+    }
     public String getUsername(){
         return this.username;
     }

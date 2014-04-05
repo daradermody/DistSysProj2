@@ -95,6 +95,10 @@ public class UserList {
         }
     }
     
+    public void resurrectUser(String username, String hashedPW, int salt, String time ){
+        this.users.add(new User(username, hashedPW, salt, time));
+    }
+    
     /**
      * Print out each user in turn.
      * @return String representation of the UserList object
