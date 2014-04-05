@@ -83,11 +83,11 @@
                     // Find index of thread being requested
                     String threadTitle;
                     ForumThread thread = null;
-                    for (int index = 0; index < Database.getNumberOfThreads(); index++) {
-                        threadTitle = Database.getThread(index).getTitle();
+                    for (int index = 0; index < ForumBoard.getNumberOfThreads(); index++) {
+                        threadTitle = ForumBoard.getThread(index).getTitle();
                         String requestedThread = Security.sanitise(request.getParameter("thread-title"), false);
                         if (threadTitle.equals(requestedThread)) {
-                            thread = Database.getThread(index); // Retrieve requested thread
+                            thread = ForumBoard.getThread(index); // Retrieve requested thread
                             break;
                         }
                     }
