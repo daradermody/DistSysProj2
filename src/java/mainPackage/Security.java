@@ -36,9 +36,9 @@ public class Security {
         boolean validity = false;
 
         // Debug use only; remove once rest of method is implemented
-        if (username.equals("jamie") && password.equals("4867360cb1992404f35efe8f7f0e8bbcc0b9069f")) {
+        if (username.equals("jamie") && password.equals("9e89ff919a6984c15fa300629456918c")) {
             validity = true; // password is "isgay"
-        } else if (username.equals("dara") && password.equals("a040f3973f1221397c9ab7e225b5647f9567081b")) {
+        } else if (username.equals("dara") && password.equals("f336d176c3bb70d81e70e9d6b1dc63e1")) {
             validity = true; // password is "notgay"
         }
         // Uncomment and set validity to false (above) when Emma provides database
