@@ -32,20 +32,10 @@ public class ForumThread {
      */
     public ForumThread(String forumTitle) {
         this.messages = new ArrayList<Message>();
-        this.keywords = new ArrayList<String>();
+       
         this.title = forumTitle;
     }
 
-    /**
-     * Constructor to create a forum thread  with a given title and
-     * list of keywords
-     * 
-     * @param forumTitle Title for forum thread.
-     */
-    public ForumThread(String forumTitle) {
-        messages = new ArrayList<Message>();
-        title = forumTitle;
-    }
 
     /**
      * Adds a new message at the end of the thread
