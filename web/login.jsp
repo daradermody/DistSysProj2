@@ -4,6 +4,7 @@
     Author     : daradermody
 --%>
 
+<%@page import="java.lang.NullPointerException"%>
 <%@page import="mainPackage.Security"%>
 <%@page import="java.util.Map.Entry"%>
 <%@page import="java.util.Map"%>
@@ -18,7 +19,6 @@
         <meta name="keywords" content="distributed systems project forum application java servlet security">
 
         <link rel="stylesheet" type="text/css" href="style.css" />
-
         <!-- Import jQuery -->
         <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.0.js"></script>
         <%-- Import PBKDF2 key derivation function --%>
