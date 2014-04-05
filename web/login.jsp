@@ -8,6 +8,7 @@
 <%@page import="java.util.Map.Entry"%>
 <%@page import="java.util.Map"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page errorPage="/errorPage.jsp" %>
 
 <!DOCTYPE html>
 <html>
@@ -21,14 +22,13 @@
         <!-- Import jQuery -->
         <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.0.js"></script>
         <%-- Import PBKDF2 key derivation function --%>
-        <script type="text/javascript"  src="https://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/pbkdf2.js"></script>
+        <script type="text/javascript"  src="https://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/sha1.js"></script>
         <%-- JavaScript function to hash password before sending it to server --%>
         <script type="text/javascript">
             $(function() {
                 $('#login-fields').submit(function() {
-                    $passwd = $('input[name="password"]'); 
-                    var derivedKey = CryptoJS.PBKDF2($passwd.val(), CryptoJS.lib.WordArray.create(), {keySize: 128 / 32, iterations: 1000});
-                    $passwd.val(derivedKey);
+                    $passwd = $('input[name="password"]');
+                    $passwd.val(CryptoJS.SHA1($passwd.val()));
                     return true;
                 });
             });
