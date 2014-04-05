@@ -30,9 +30,8 @@ public class ForumThread {
      * list of keywords
      * 
      * @param forumTitle Title for forum thread.
-     * @param kwords Array of keywords.
      */
-    public ForumThread(String forumTitle, String[] kwords) {
+    public ForumThread(String forumTitle) {
         messages = new ArrayList<Message>();
         title = forumTitle;
     }
