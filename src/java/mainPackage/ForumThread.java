@@ -1,3 +1,12 @@
+/* 
+ * Group:       Dara Dermody (10099638), Emma Foley (10105239), Niko Flores (10103406), Patrick O'Keeffe (10128794)
+ * Module:      Distributed Systems 2
+ *      Code:   CE4208
+ * Lecturer:    Reiner Dojen
+ * Date:        07 April 2014
+ *
+ * Project:     Secure Authentication and Session Management System for a Web Application
+ */
 package mainPackage;
 import java.util.*;
 
