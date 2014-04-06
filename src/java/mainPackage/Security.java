@@ -177,6 +177,8 @@ public class Security {
         userInfo[USER] = verifySession(userInfo[ID]); // Get username from ID (null if invalid)
         // If no session ID, check for username and password details
         if (userInfo[USER] == null) {
+            userInfo[ID] = ""; // Reset given ID if invalid
+            
             // Get username and password parameters from user request and sanitise each
             userInfo[USER] = sanitise(request.getParameter("username"), false);
             String password = sanitise(request.getParameter("password"), false);
