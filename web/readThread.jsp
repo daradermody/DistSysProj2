@@ -102,9 +102,8 @@
                     // If user posted content, add message to thread
                     String postedContent = Security.sanitise(request.getParameter("messageBody"), true);
 
-                    if (!postedContent.equals("")) {
+                    if (!postedContent.equals(""))
                         thread.addMessage(postedContent, username);
-                    }
 
                     // For each message, display according to set of tags and style
                     int messageCount = 0; // Used to find last message posted
