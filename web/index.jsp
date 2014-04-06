@@ -48,11 +48,12 @@
 
             // Add new thread if parameters exist
             String newThreadTitle = Security.sanitise(request.getParameter("threadName"), false);
-            if (!newThreadTitle.equals("")) {
+            String newThreadMessage = Security.sanitise(request.getParameter("threadBody"), true);
+            if (!newThreadTitle.equals("") && !newThreadMessage.equals("")) {
                 // Create new forum thread object with user-inputted thread title/name
                 ForumThread newThread = new ForumThread(newThreadTitle);
                 // Add message to thread obejct
-                newThread.addMessage(Security.sanitise(request.getParameter("threadBody"), true), username);
+                newThread.addMessage(newThreadMessage, username);
                 ForumBoard.addThread(newThread); // Add thread object to database
             }
         %>
