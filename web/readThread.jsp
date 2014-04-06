@@ -66,14 +66,14 @@
         <div class="main-body">
             <header>
                 <span id="logo">Distributed Systems Project II</span>
-                <form name="logOut" action="login.jsp" method="GET">
+                <form name="logOut" action="login.jsp" method="POST">
                     <input type="hidden" name="log-out" value="true">
                     <input type="submit" class="header-button" value="Log Out">
                 </form>
-                <form name="home" action="index.jsp" method="GET">
+                <form name="home" action="index.jsp" method="POST">
                     <input type="submit" class="header-button" value="Threads">
                 </form>
-                <form name="newThread" action="newThread.jsp" method="GET">
+                <form name="newThread" action="newThread.jsp" method="POST">
                     <input type="submit" class="header-button" value="New Thread">
                 </form>
             </header>
@@ -132,12 +132,12 @@
                         </div>
                         
                         <div class="message">
-                            <form name="newPost" action="readThread.jsp#latest" method="GET">
+                            <form name="newPost" action="readThread.jsp#latest" method="POST">
                                 <textarea class="message thread-message" name="messageBody"></textarea>
                                 <input id="submit-button" type="submit" value="Post">
                                 <input type="hidden" name="thread-title" value="<%= thread.getTitle()%>">
                             </form>
-                            <form name="refresh" action="readThread.jsp#latest" method="GET">
+                            <form name="refresh" action="readThread.jsp#latest" method="POST">
                                 <input type="hidden" name="thread-title" value="<%= thread.getTitle()%>">
                                 <button id="refresh-button" type="submit" name="refresh" value="true">Refresh</button>
                             </form>

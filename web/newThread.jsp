@@ -65,16 +65,16 @@
         <div class="main-body">
             <header>
               <span id="logo">Distributed Systems Project II</span>
-                <form name="logOut" action="login.jsp" method="GET">
+                <form name="logOut" action="login.jsp" method="POST">
                     <input type="hidden" name="log-out" value="true">
                     <input type="submit" class="header-button" value="Log Out">
                 </form>
-                <form name="home" action="index.jsp" method="GET">
+                <form name="home" action="index.jsp" method="POST">
                     <input type="submit" class="header-button" value="Threads">
                 </form>
             </header>
 
-            <form name="newThread" method="GET" action="index.jsp">
+            <form name="newThread" method="POST" action="index.jsp">
                 <div class="big-wrapper message-container">
                     <div id="thread-title-container">
                         Title of thread: <input type="text" id="thread-title" name="threadName">

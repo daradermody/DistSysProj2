@@ -95,7 +95,7 @@
             <div class="big-wrapper" id="login-container">
                 <div id="login-image">
                 </div>
-                <form id="login-fields" name="login" action="<%= address%>" method="GET">
+                <form id="login-fields" name="login" action="<%= address%>" method="POST">
                     <ol>
                         <li><input type="text" class="login-text-field" placeholder="Username" name="username"></li>
                         <li><input type="password" class="login-text-field" placeholder="Password" name="password"></li>

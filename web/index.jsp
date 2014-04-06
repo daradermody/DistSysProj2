@@ -76,19 +76,19 @@
         <div class="main-body">
             <header>
                 <span id="logo">Distributed Systems Project II</span>
-                <form name="logOut" action="login.jsp" method="GET">
+                <form name="logOut" action="login.jsp" method="POST">
                     <input type="hidden" name="log-out" value="true">
                     <input type="submit" class="header-button" value="Log Out">
                 </form>
-                <form name="home" action="index.jsp" method="GET">
+                <form name="home" action="index.jsp" method="POST">
                     <input type="submit" class="header-button" value="Threads">
                 </form>
-                <form name="newThread" action="newThread.jsp" method="GET">
+                <form name="newThread" action="newThread.jsp" method="POST">
                     <input type="submit" class="header-button" value="New Thread">
                 </form>
             </header>
 
-            <form name="threadList" method="GET" action="readThread.jsp">
+            <form name="threadList" method="POST" action="readThread.jsp">
                 <ul>
                     <%-- Loops through getting of thread items --%>
                     <% for (int i = 0; i < ForumBoard.getNumberOfThreads(); i++) {
