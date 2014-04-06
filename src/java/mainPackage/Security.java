@@ -16,12 +16,12 @@ import org.owasp.html.Sanitizers;
 
 /**
  *
- * @author Dara Dermody, Niko Flores, Emma Foley and Patrick O'Keffe
+ * @author Dara Dermody, Niko Flores, Emma Foley and Patrick O'Keeffe
  */
 public class Security {
 
     private static ArrayList<User> sessionUsers = new ArrayList<>();
-    final private static long TIMEOUT = 900;
+    final private static int TIMEOUT = 900;
 
     /**
      * Checks the validity of the username and corresponding password entered by
@@ -35,7 +35,6 @@ public class Security {
     public static boolean verifyUser(String username, String password) {
         boolean validity = false;
         
-        // Uncomment and set validity to false (above) when Emma provides database
         if(username != null && password != null) 
             validity = UserList.verifyUser(username, password);
 
@@ -53,7 +52,7 @@ public class Security {
      */
     public static String startSession(String username) {
         boolean exists = false;
-        String ID = null; // ID value to return; if person already has session, return null
+        String ID = null; // ID value to return        
 
         if (username != null) {
             // Cycle through sessions recorded for existence of user
@@ -77,11 +76,6 @@ public class Security {
                         sessionUsers.add(user); // Adds the user into the list of logged in users
                     }
 
-                // lookup user in userlist
-                // verify user
-                // update session ID and time
-                //DON'T create a new user
-                //sessionUsers.add(user);
                 ID = String.valueOf(uniqueID); // Return session ID
             }
         }
@@ -107,7 +101,7 @@ public class Security {
                     // Retrieves the current time in milliseconds and converts into an integer
                     int currentSeconds = (int)(System.currentTimeMillis() / 1000);
                     // Calculates the elapsed time by subtracting the current time (in seconds) from the user's timestamp
-                    long elapsedTime = currentSeconds - user.getTimestamp();
+                    int elapsedTime = currentSeconds - user.getTimestamp();
 
                     // If the elapsed time is greater than 15 minutes (15 * 60 seconds = 900)
                     if (elapsedTime <= TIMEOUT) {
