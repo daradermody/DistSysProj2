@@ -16,7 +16,10 @@ import java.util.Random;
 
 /**
  * A User data type, containing the details of one user.
- * @author elfie
+ * @author Emma Foley
+ * @author Dara Dermody
+ * @author Niko Flores
+ * @author Patrick O Keeffe
  */
 public class User {
     private final String username;

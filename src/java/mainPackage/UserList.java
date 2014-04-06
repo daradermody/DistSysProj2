@@ -10,7 +10,10 @@ import java.util.ArrayList;
 
 /**
  * Collection of users, and associated methods for data management
- * @author elfie
+ * @author Emma Foley
+ * @author Dara Dermody
+ * @author Niko Flores
+ * @author Patrick O Keeffe
  */
 public class UserList {
     

@@ -3,8 +3,10 @@ import java.util.*;
 
 /**
  * This class is based on the module labs, but some modification have been made.
- * @author reiner.dojen
- * @author elfie
+ * @author Emma Foley
+ * @author Dara Dermody
+ * @author Niko Flores
+ * @author Patrick O Keeffe
  */
 public class ForumThread {
     ArrayList<Message> messages;

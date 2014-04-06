@@ -10,7 +10,10 @@ import java.util.Date;
 
 /**
  *
- * @author reiner.dojen
+ * @author Emma Foley
+ * @author Dara Dermody
+ * @author Niko Flores
+ * @author Patrick O Keeffen
  */
 public class Message {
 

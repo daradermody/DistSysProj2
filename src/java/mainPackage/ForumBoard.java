@@ -11,7 +11,10 @@ import java.util.ArrayList;
 /**
  * A container for the threads in a forum.
  * Deals with creating and managing Forum Threads.
- * @author elfie
+ * @author Emma Foley
+ * @author Dara Dermody
+ * @author Niko Flores
+ * @author Patrick O Keeffe
  */
 public class ForumBoard {
     private static ArrayList<ForumThread> threads = new ArrayList<ForumThread>();

@@ -15,8 +15,11 @@ import org.owasp.html.PolicyFactory;
 import org.owasp.html.Sanitizers;
 
 /**
- *
- * @author Dara Dermody, Niko Flores, Emma Foley and Patrick O'Keeffe
+ * Class to handle session management and security
+ * @author Emma Foley
+ * @author Dara Dermody
+ * @author Niko Flores
+ * @author Patrick O Keeffe
  */
 public class Security {
 
