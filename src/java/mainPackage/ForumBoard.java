@@ -14,35 +14,8 @@ import java.util.ArrayList;
  * @author elfie
  */
 public class ForumBoard {
-    private ArrayList<ForumThread> threads;    
-    private String filepath; // path to database
-    static int numberOfThreads;
-    /**
-     * Default constructor to initialize an empty board.
-     */
-    public ForumBoard(){
-        numberOfThreads = 0;
-        threads =  new ArrayList(numberOfThreads);
-        // TODO add a new database
-    }
-    
-    /**
-     * Load forum data from a file
-     * @param filename path to the file containing thread data
-     */
-    public ForumBoard(String filename){
-        this.filepath = filename; 
-        //TODO Implement this.
-        // NOTE: algorithm needs adjustment
-        //       this will be done when the database layout is finalized.
-        //For each entry in a file:
-        //    read the thread title
-        //    if the thread is "recent"
-        //        add a thread of that title
-        //        for each message in the thread
-        //            add the message, poster and date
-        // DONE
-    }
+    private static ArrayList<ForumThread> threads = new ArrayList<ForumThread>();
+    private static int numberOfThreads;
     
     /**
      * Returns a thread by index.
@@ -51,8 +24,8 @@ public class ForumBoard {
      * @return index-th thread in the database if index <= number of threads,
      * null otherwise.
      */
-    public ForumThread getThread(int index) {        
-        return this.threads.get(index);
+    public static ForumThread getThread(int index) {        
+        return threads.get(index);
     }
     
     /**
@@ -60,13 +33,22 @@ public class ForumBoard {
      * @param title The name of the new thread.
      * @return the number of threads in the board
      */    
-    public int addThread(String title){
+    public static int addThread(String title){
         threads.add(new ForumThread(title));
         return threads.size();        
     }
     
+    public static int addThread(ForumThread t) {
+        threads.add(t);
+        return threads.size();
+    }
+    
+    /**
+     * Get the number of threads 
+     * @return number of thread in a forum
+     */
     public static int getNumberOfThreads(){
-        return ForumBoard.numberOfThreads;
+        return threads.size();
     }
     
 }

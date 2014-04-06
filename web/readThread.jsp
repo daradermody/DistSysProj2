@@ -7,6 +7,8 @@
 <%@page import="mainPackage.*"%>
 <%@page import="java.util.ArrayList"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page errorPage="/errorPage.jsp" %>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -81,11 +83,11 @@
                     // Find index of thread being requested
                     String threadTitle;
                     ForumThread thread = null;
-                    for (int index = 0; index < Database.getNumberOfThreads(); index++) {
-                        threadTitle = Database.getThread(index).getTitle();
+                    for (int index = 0; index < ForumBoard.getNumberOfThreads(); index++) {
+                        threadTitle = ForumBoard.getThread(index).getTitle();
                         String requestedThread = Security.sanitise(request.getParameter("thread-title"), false);
                         if (threadTitle.equals(requestedThread)) {
-                            thread = Database.getThread(index); // Retrieve requested thread
+                            thread = ForumBoard.getThread(index); // Retrieve requested thread
                             break;
                         }
                     }
