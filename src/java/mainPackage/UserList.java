@@ -25,7 +25,7 @@ public class UserList {
      * @param username
      * @return the user object matching the username, or null 
      */
-    public static User findUser(String username){
+    protected static User findUser(String username){
         User user = null;
         loop:
         for(int i=0; i<users.size(); i++){
@@ -42,7 +42,7 @@ public class UserList {
      * @param username
      * @return the user object matching the username, or null 
      */
-    public static boolean contains(String username){
+    protected static boolean contains(String username){
         Boolean exists = false;
         if (users.isEmpty()) return false;
         loop:
@@ -59,7 +59,7 @@ public class UserList {
      * Get the entire user list
      * @return the users stored in the list 
      */
-    public static ArrayList<User> getUserList(){
+    protected static ArrayList<User> getUserList(){
         return users;
     }
     
@@ -69,7 +69,7 @@ public class UserList {
      * @param password
      * @return true if the username and password match, false otherwise
      */
-    public static boolean verifyUser(String username, String password){
+    protected static boolean verifyUser(String username, String password){
         User user = findUser(username);
         if (user != null){
             return (user.getPwdHash().equals(User.hash(user.getSalt()+password)));
@@ -84,7 +84,7 @@ public class UserList {
      * @param username
      * @param password 
      */
-    public void addUser(String username, String password){
+    protected void addUser(String username, String password){
         if (!contains(username)){
             users.add(new User(username, password));
         }

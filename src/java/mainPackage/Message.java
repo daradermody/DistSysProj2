@@ -17,16 +17,7 @@ public class Message {
     private String content;
     private String poster;
     final private String date;
-
-    /**
-     * Default constructor to create a forum message with time
-     *
-     */
-    public Message() {
-        DateFormat dateFormatter = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
-        date = dateFormatter.format(new Date());
-    }
-
+    
     /**
      * Constructor to create a forum message with a given content
      *
@@ -40,20 +31,6 @@ public class Message {
         DateFormat dateFormatter = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
         this.date = dateFormatter.format(new Date());
     }
-    
-     /**
-     * Constructor for resurrecting a message from a CSV file.
-     * In this case, the date is already specified, and won't be auto-generated.
-     * @param text the message content.
-     * @param poster the message poster.
-     * @param date the date the message was originally posted.
-     */
-    public Message(String text, String poster, String date){
-        this.content = text;
-        this.poster = poster;
-        this.date = date;
-    }
-    
    
     /**
      * Returns the content of the forum message

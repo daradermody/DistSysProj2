@@ -15,7 +15,7 @@ import java.util.Date;
 import java.util.Random;
 
 /**
- * A User data type, containing the details of one user from the database
+ * A User data type, containing the details of one user.
  * @author elfie
  */
 public class User {
@@ -25,12 +25,14 @@ public class User {
     private int sessionTime;
     private final int salt;
     private final String pwdHash;
+    
     /**
-     * Default constructor - creates a new forum thread with default title "no title"
+     * Constructor to create a user with the given username and password.
+     * Other attributes are generated.
      * @param usnm the name for the new user 
      * @param password the user's password
      */
-    public User(String usnm, String password) {
+    protected User(String usnm, String password) {
         this.username = usnm;
         
         DateFormat dateFormatter = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
@@ -39,61 +41,84 @@ public class User {
         Random r = new Random();
         this.salt = r.nextInt();
         this.pwdHash = hash(salt+password);
-        // TODO: created users should be added to a list of some sort
+        
         sessionID = null; // for default
         sessionTime = 0; // for default
     }
     
     /**
-     * Constructor for "resurrecting" a User from a file.
-     * @param username user's name
-     * @param hashPW hashed password
-     * @param salt salt 
-     * @param date creation date
+     * Getter for username attribute
+     * @return the username
      */
-    public User(String username, String hashPW, int salt, String date){
-        this.username=username;
-        this.pwdHash=hashPW;
-        this.salt=salt;
-        this.creationDate = date;
-    }
-    public String getUsername(){
+    protected String getUsername(){
         return this.username;
     }
     
-    public String getCreationDate(){
+    /**
+     * Getter for the creationDate attribute
+     * @return the date/time the user joined the site
+     */
+    protected String getCreationDate(){
         return this.creationDate;
     }
     
-    public int getTimestamp() {
+    /**
+     * getter for the sessionTime attribute
+     * @return the sessionTime or null id the user is not logged in
+     */
+    protected int getTimestamp() {
         return this.sessionTime;
     }
     
-    public void setTimestamp(int st) {
+    /**
+     * setter for the sessionTime attribute
+     * @param st 
+     */
+    protected void setTimestamp(int st) {
         this.sessionTime=st;
     }
     
-    public int getSalt(){
+    /**
+     * getter for the salt attribute
+     * @return the salt used for the password hashing
+     */
+    protected int getSalt(){
         return this.salt;
     }
     
-    public String getSessionID(){
+    /**
+     * getter for the sessionID attribute
+     * @return the session id or "" if the user is not logged in
+     */
+    protected String getSessionID(){
         return this.sessionID;
     }
     
-    public void setSessionID(String id){
+    /**
+     * Setter for the sessionID
+     * @param id the session ID
+     */
+    protected void setSessionID(String id){
         this.sessionID=id;
     }
     
-    public String getPwdHash(){
+    /**
+     * Getter for the password hash.
+     * @return the (salt) hashed password.
+     */
+    protected String getPwdHash(){
         return this.pwdHash;
     }
     
-    public static String hash(String plain){    
+    /**
+     * Hash a plain test salt+password
+     * @param plain the string to be hashed (salt+password)
+     * @return 
+     */
+    protected static String hash(String plain){    
         String cipher = null;
          
         if(plain == null) return null;
-         
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA");
             //Update input string in message digest
@@ -101,13 +126,16 @@ public class User {
  
             //Converts message digest value in base 16 (hex)
             cipher = new BigInteger(1, digest.digest()).toString(16);
- 
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) { 
+            System.out.println("The specified algorithm is not supported.");
         }
         return cipher;
     }
     
+    /**
+     * Return a String representation of the object
+     * @return the object string
+     */
     @Override
     public String toString(){
         return(String.format("%s, %s, %s, %s", this.username, this.pwdHash, this.salt, this.creationDate));
